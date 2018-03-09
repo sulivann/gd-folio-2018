@@ -16,6 +16,7 @@
     "express": "^4.15.3",
     "node-sass": "^4.7.2",
     "nuxt": "^1.0.0",
+    "nuxt-sass-resources-loader": "^1.2.0",
     "sass-loader": "^6.0.7"
   },
   "devDependencies": {
