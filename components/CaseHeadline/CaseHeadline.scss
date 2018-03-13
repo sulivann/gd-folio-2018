@@ -1,0 +1,9 @@
+$case-headline-negative-space: -30px;
+
+.case-headline {
+  @include typo-headline;
+
+  text-align: center;
+  line-height: 1em;
+  margin-top: $case-headline-negative-space;
+}

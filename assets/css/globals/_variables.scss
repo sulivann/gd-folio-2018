@@ -7,5 +7,27 @@ $font-weight-black: 900;
 $font-weight-bold: 700;
 $font-weight-regular: 400;
 $font-weight-light: 300;
+$font-size-small: 12px;
 $font-size-base: 16px;
+$font-size-giant: 186px;
 $line-height-base: 1.5;
+$letter-spacing-base: normal;
+$letter-spacing-least: -0.02em;
+
+/**
+ * Colors
+ **/
+$color-black: #151515;
+$color-white: #fafafa;
+$color-white-dimmed: rgba(250, 250, 250, 0.4);
+
+/**
+ * Spacings
+ **/
+$space-xx-large: 128px;
+$space-x-large: 64px;
+$space-large: 36px;
+$space-base: 28px;
+$space-small: 18px; /* Used */
+$space-tiny: 8px; /* Used */
+$space-x-tiny: 4px;

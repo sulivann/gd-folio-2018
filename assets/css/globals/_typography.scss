@@ -3,4 +3,24 @@
   font-size: $font-size-base;
   font-weight: $font-weight-light;
   line-height: $line-height-base;
+  color: $color-white;
+}
+
+@mixin typo-heading {
+  font-family: $font-family-heading;
+  font-size: $font-size-small;
+  font-weight: $font-weight-light;
+  color: $color-white-dimmed;
+  text-transform: uppercase;
+}
+
+@mixin typo-headline {
+  font-family: $font-family-text;
+  font-size: $font-size-giant;
+  text-transform: uppercase;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: $color-white;
+  color: transparent;
+  font-weight: $font-weight-black;
+  letter-spacing: $letter-spacing-least;
 }

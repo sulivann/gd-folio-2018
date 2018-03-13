@@ -1,0 +1,20 @@
+.case-heading {
+  @include typo-heading;
+  @include container;
+
+  display: flex;
+  justify-content: space-between;
+  margin-top: $space-xx-large;
+
+  &__element:not(:last-child) {
+    margin-bottom: $space-base;
+  }
+
+  &__label {
+    margin-right: $space-small;
+  }
+
+  &__separator {
+    margin-right: $space-tiny;
+  }
+}
