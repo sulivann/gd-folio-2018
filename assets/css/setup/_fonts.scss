@@ -1,0 +1,49 @@
+/**
+ * Simplon
+ **/
+
+@font-face {
+  font-family: 'Simplon BP';
+  src: url('~assets/fonts/simplon/simplon_bp_light_1-webfont.woff2') format('woff2'),
+       url('~assets/fonts/simplon/simplon_bp_light_1-webfont.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+
+}
+
+/**
+ * Univers
+ **/
+
+@font-face {
+  font-family: 'Univers LT Std';
+  src: url('~assets/fonts/univers/UniversLTStd-Light.woff2') format('woff2'),
+      url('~assets/fonts/univers/UniversLTStd-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Univers LT Std';
+  src: url('~assets/fonts/univers/UniversLTStd.woff2') format('woff2'),
+      url('~assets/fonts/univers/UniversLTStd.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Univers LT Std';
+  src: url('~assets/fonts/univers/UniversLTStd-Bold.woff2') format('woff2'),
+      url('~assets/fonts/univers/UniversLTStd-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Univers LT Std';
+  src: url('~assets/fonts/univers/UniversLTStd-BlackEx.woff2') format('woff2'),
+      url('~assets/fonts/univers/UniversLTStd-BlackEx.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}

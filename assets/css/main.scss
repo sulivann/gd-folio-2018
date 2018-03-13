@@ -1,4 +1,8 @@
-@import 'reset';
+@import 'globals/typography';
+@import 'globals/variables';
+@import 'setup/reset';
+@import 'setup/fonts';
+@import 'setup/base';
 
 /**
  * Transitions temporary used
