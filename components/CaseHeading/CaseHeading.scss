@@ -4,7 +4,7 @@
 
   display: flex;
   justify-content: space-between;
-  margin-top: $space-xx-large;
+  margin-top: $space-x-large;
 
   &__element:not(:last-child) {
     margin-bottom: $space-base;

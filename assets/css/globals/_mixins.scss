@@ -11,3 +11,10 @@
   max-width: 580px;
   margin: 0 auto;
 }
+
+@mixin container-wide {
+  max-width: 1180px;
+  margin: 0 auto;
+  margin-bottom: $space-xx-large;
+  width: 82%;
+}

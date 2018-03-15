@@ -1,0 +1,7 @@
+.case-mock-up {
+  @include container-wide;
+
+  &__img {
+    width: 100%;
+  }
+}
