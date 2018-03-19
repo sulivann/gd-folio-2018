@@ -1,5 +1,6 @@
 .case-video {
   @include container-wide;
+  opacity: 0;
 
   video {
     width: 100%;

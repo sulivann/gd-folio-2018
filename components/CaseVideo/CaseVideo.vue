@@ -1,5 +1,5 @@
 <template>
-  <div class="case-video">
+  <div class="case-video" v-scroll="handleFadeIn">
     <video
       autoplay
       muted
@@ -24,6 +24,19 @@ export default {
         event.target.play();
       } else {
         event.target.pause();
+      }
+    },
+    handleFadeIn: function(evt, el) {
+      if (((el.getBoundingClientRect().top - window.innerHeight) < -130) && !el.classList.contains('js--already-animated')) {
+        // Start video on waypoint
+        const videos = el.getElementsByTagName('video');
+        videos[0].play();
+        // Add new class on waypoint
+        el.classList.add('js--already-animated');
+        TweenMax.to(el, 1.5, {
+          opacity: 1,
+          ease: Sine.easeOut
+        });
       }
     }
   },

@@ -34,7 +34,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~/plugins/smooth-scroll.js', ssr: false }
+    { src: '~/plugins/smooth-scroll.js', ssr: false },
+    { src: '~/plugins/scroll.js', ssr: false }
   ],
 
   /*

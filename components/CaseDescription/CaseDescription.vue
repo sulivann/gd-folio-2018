@@ -7,3 +7,16 @@
 <style lang="scss">
   @import './CaseDescription.scss';
 </style>
+
+<script>
+  import { TweenMax } from 'gsap';
+  export default {
+    mounted: function() {
+      TweenMax.to(this.$el, 1.5, {
+        opacity: 1,
+        ease: Sine.easeOut,
+        delay: 0.4
+      });
+    }
+  }
+</script>

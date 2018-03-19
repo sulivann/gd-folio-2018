@@ -26,3 +26,15 @@
 <style lang="scss">
   @import './CaseHeading.scss';
 </style>
+
+<script>
+  import { TweenMax } from 'gsap';
+  export default {
+    mounted: function() {
+      TweenMax.to(this.$el, 1.5, {
+        opacity: 1,
+        ease: Sine.easeOut,
+      });
+    }
+  }
+</script>
