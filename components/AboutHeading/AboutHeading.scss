@@ -1,0 +1,11 @@
+/**
+ * 1 - Font is glitchy
+ **/
+.about-heading {
+  @include typo-headline;
+
+  font-size: $font-size-xtra-large;
+  line-height: 1;
+  transform: translateX(-12px); /* 1 */
+  margin-bottom: $space-medium;
+}

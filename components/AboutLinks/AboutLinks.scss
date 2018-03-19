@@ -1,0 +1,13 @@
+.about-links {
+  a {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: $font-size-small;
+    letter-spacing: 2px;
+    display: inline-block;
+  }
+
+  a:not(:last-child) {
+    margin-right: $space-large;
+  }
+}

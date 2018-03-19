@@ -2,3 +2,7 @@ body {
   @include typo-base;
   background-color: $color-black;
 }
+
+a {
+  color: $color-white;
+}

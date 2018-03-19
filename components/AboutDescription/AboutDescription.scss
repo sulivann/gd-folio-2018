@@ -1,0 +1,10 @@
+$about-description-max-width: 380px;
+
+.about-description {
+  max-width: $about-description-max-width;
+  margin-bottom: $space-x-large;
+
+  p:not(:last-child) {
+    margin-bottom: $space-medium;
+  }
+}
