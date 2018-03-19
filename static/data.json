@@ -1,0 +1,36 @@
+{
+  "data": {
+    "badass": {
+      "name": "Badass",
+      "role": "Motion & user interface design",
+      "contextLabel": "Agency",
+      "context": "Werkstatt",
+      "year": 2017,
+      "projectNumber": "01 / 04",
+      "description": "I had the opportunity during my internship at Werkstatt to work along other great designers on the website of Badass. A production film company, with great names. The purpose was to provide a smooth experience to get through every directors' work without switching or loading any pages.",
+      "banner": {
+        "src": "badass/banner_badass.png",
+        "logoSrc": "badass/badass.svg"
+      },
+      "elements": [
+        {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "badass/yaeji.mp4"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "My mission here was to create a clear navigation and smooth animations to browse the website, while maintaining an impactful effect which characterizes Badass."
+        },
+        {
+          "type": "mockup",
+          "src": "badass/mock_up_01.png"
+        }
+      ]
+    }
+  }
+}

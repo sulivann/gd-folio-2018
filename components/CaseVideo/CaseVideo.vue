@@ -4,9 +4,12 @@
       autoplay
       muted
       v-on:click="handleVideoClick">
-      <source
-        src="~assets/videos/yaeji.mp4"
-        type="video/mp4">
+      <template v-for="(source, index) in sources">
+        <source
+          :key="index"
+          :src="`/videos/${source.src}`"
+          :type="source.type">
+      </template>
       Votre navigateur ne permet pas de lire les vidéos HTML5.
     </video>
   </div>
@@ -17,7 +20,10 @@
 </style>
 
 <script>
+import { TweenMax } from 'gsap';
+
 export default {
+  props: ['sources'],
   methods: {
     handleVideoClick (event) {
       if (event.target.paused) {
@@ -33,7 +39,7 @@ export default {
         videos[0].play();
         // Add new class on waypoint
         el.classList.add('js--already-animated');
-        TweenMax.to(el, 1.5, {
+        TweenMax.to(el, 0.7, {
           opacity: 1,
           ease: Sine.easeOut
         });

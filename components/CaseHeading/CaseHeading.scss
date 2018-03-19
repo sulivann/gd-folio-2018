@@ -1,3 +1,5 @@
+$case-heading-label-width: 60px;
+
 .case-heading {
   @include typo-heading;
   @include container;
@@ -12,10 +14,11 @@
   }
 
   &__label {
-    margin-right: $space-small;
+    width: $case-heading-label-width;
+    display: inline-block;
   }
 
   &__separator {
-    margin-right: $space-tiny;
+    margin-right: $space-small;
   }
 }

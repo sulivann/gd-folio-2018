@@ -1,9 +1,9 @@
 <template>
   <div class="case-banner">
     <div class="case-banner__container" v-scroll="handleParallax">
-      <img class="case-banner__img" src="~assets/img/banner_badass.png" />
+      <img class="case-banner__img" :src="`/img/${banner.src}`" />
     </div>
-    <img class="case-banner__logo" src="~assets/img/badass.svg" />
+    <img class="case-banner__logo" :src="`/img/${banner.logoSrc}`" />
   </div>
 </template>
 
@@ -16,8 +16,9 @@
   import Scrollbar from 'smooth-scrollbar';
 
   export default {
+    props: ['banner'],
     mounted: function() {
-      TweenMax.to(this.$el, 1.5, {
+      TweenMax.to(this.$el, 0.7, {
         opacity: 1,
         ease: Sine.easeOut,
         delay: 0.8
