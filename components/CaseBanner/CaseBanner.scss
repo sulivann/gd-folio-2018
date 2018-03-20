@@ -1,4 +1,5 @@
 $case-banner-height: 400px;
+$case-banner-logo-height: 150px;
 
 .case-banner {
   height: $case-banner-height;
@@ -16,5 +17,6 @@ $case-banner-height: 400px;
 
   &__logo {
     @include absolute-center;
+    height: $case-banner-logo-height;
   }
 }

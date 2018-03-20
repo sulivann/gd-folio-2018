@@ -29,6 +29,164 @@
         {
           "type": "mockup",
           "src": "badass/mock_up_01.png"
+        },
+        {
+          "type": "mockup",
+          "src": "badass/mock_up_02.png"
+        },
+        {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "badass/yaeji.mp4"
+            }
+          ]
+        },
+        {
+          "type": "mockup",
+          "src": "badass/mock_up_03.png"
+        },
+        {
+          "type": "mockup",
+          "src": "badass/mock_up_04.png"
+        }
+      ]
+    },
+    "oeildeep": {
+      "name": "Oeildeep",
+      "role": "Website & Identity",
+      "context": "Freelance",
+      "year": 2017,
+      "projectNumber": "04 / 04",
+      "description": "Oeildeep is a young company that offers to amateur and professional photographers workshops and masterclasses to improve their creativity. My mate Arnaud Villani, and I, were asked to create Oeildeep's website and its fresh new identity from scratch.",
+      "banner": {
+        "src": "oeildeep/banner_oeildeep.jpg",
+        "logoSrc": "oeildeep/oeildeep.svg"
+      },
+      "elements": [
+        {
+          "type": "mockup",
+          "src": "oeildeep/mock_up_01.png"
+        },
+        {
+          "type": "mockup",
+          "src": "oeildeep/mock_up_02.png"
+        },
+        {
+          "type": "mockup",
+          "src": "oeildeep/mock_up_03.png"
+        },
+        {
+          "type": "mockup",
+          "src": "oeildeep/mock_up_04.png"
+        },
+        {
+          "type": "mockup",
+          "src": "oeildeep/mock_up_05.png"
+        },
+        {
+          "type": "mockup",
+          "src": "oeildeep/mock_up_06.png"
+        }
+      ]
+    },
+    "vitality": {
+      "name": "Vitality",
+      "role": "Website redesign",
+      "contextLabel": "Client",
+      "context": "Vitality",
+      "year": 2017,
+      "projectNumber": "03 / 04",
+      "description": "With more than a million unique visitors per year on their website, the French leader of e-sport, Team Vitality, asked us to redesign their website. With my partner Michael Zaccardi, we created a brand new UI and UX, in line with their growing reputation, to facilitate navigation, and access to news and streams of players.",
+      "banner": {
+        "src": "vitality/banner_vitality.jpg",
+        "logoSrc": "vitality/vitality.svg"
+      },
+      "elements": [
+        {
+          "type": "mockup",
+          "src": "vitality/mock_up_01.png"
+        },
+        {
+          "type": "mockup",
+          "src": "vitality/mock_up_02.png"
+        },
+        {
+          "type": "mockup",
+          "src": "vitality/mock_up_03.jpg"
+        },
+        {
+          "type": "mockup",
+          "src": "vitality/mock_up_04.png"
+        },
+        {
+          "type": "mockup",
+          "src": "vitality/mock_up_05.png"
+        }
+      ]
+    },
+    "tesla": {
+      "name": "Tesla",
+      "role": "In-car interface",
+      "context": "School project",
+      "year": 2017,
+      "projectNumber": "02 / 04",
+      "description": "We were eight students, asked to redesign the four main interfaces in a Tesla car : cluster, touchscreen, mobile app and watch app. It was a new exercise therefore creating interfaces that we were not used to, was really exciting. In addition, we had to consider a collaboration between Tesla and a brand of our choice. We chose Tripadvisor in order to create travel and discovery-oriented interfaces.",
+      "banner": {
+        "src": "tesla/banner_tesla.jpg",
+        "logoSrc": "tesla/tesla.svg"
+      },
+      "elements": [
+        {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "badass/yaeji.mp4"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "After several meetings, we agreed on a direction to take together and then worked separately. I chose to work on the cluster interface because it appeared to me as the most innovative one. Also something complex I had never been confronted with."
+        },
+        {
+          "type": "mockup",
+          "src": "tesla/mock_up_01.png"
+        },
+        {
+          "type": "mockup",
+          "src": "tesla/mock_up_02.png"
+        },
+        {
+          "type": "text",
+          "text": "The cluster is a screen that helps the driver, without distracting him. It must display the right information at the right time. In order to match TipAdvisor’s DNA, I decided to focus the cluster on discovery and navigation, by displaying a large map in the background showing some noteworthy location. Two modular elements are placed on top of it, and may be modified as the driver pleases."
+        },
+        {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "badass/yaeji.mp4"
+            }
+          ]
+        },
+        {
+          "type": "mockup",
+          "src": "tesla/mock_up_03.png"
+        },
+        {
+          "type": "mockup",
+          "src": "tesla/mock_up_04.png"
+        },
+        {
+          "type": "text",
+          "text": "I also created animations especially for the entry in the vehicle, or interactions like the voice command."
+        },
+        {
+          "type": "mockup",
+          "src": "tesla/mock_up_05.png"
         }
       ]
     }
