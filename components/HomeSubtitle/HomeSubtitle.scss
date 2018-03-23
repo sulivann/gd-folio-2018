@@ -1,0 +1,15 @@
+.project-subtitle{
+    position: absolute;
+    color: white;
+    pointer-events: none;
+    left: 50%;
+    bottom: 20vh;
+    transform: translate3d(-50%, -50%, 0);
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1.3px;
+    opacity: 0;
+    @media screen and (max-width: 420px){
+      font-size: 14px;
+    }
+}
