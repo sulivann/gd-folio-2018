@@ -1,18 +1,20 @@
-svg, canvas {
-    z-index: 10;
-    position: absolute;
-    background-color: black;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;  
-    background:transparent;
-    pointer-events: none;
-  }
-  .home-svgs__container{
-    position: absolute;
-    overflow: hidden;
-    display: flex;
-    top: -10000px;
-    left: -10000px;
+.home-project__title,
+.title-canvas svg {
+  z-index: 10;
+  position: absolute;
+  background-color: black;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:transparent;
+  pointer-events: none;
+}
+
+.home-svgs__container{
+  position: absolute;
+  overflow: hidden;
+  display: flex;
+  top: -10000px;
+  left: -10000px;
 }

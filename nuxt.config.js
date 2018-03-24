@@ -35,7 +35,8 @@ module.exports = {
   */
   plugins: [
     { src: '~/plugins/smooth-scroll.js', ssr: false },
-    { src: '~/plugins/scroll.js', ssr: false }
+    { src: '~/plugins/scroll.js', ssr: false },
+    { src: '~/plugins/resource-loader.js', ssr: false }
   ],
 
   /*
@@ -62,6 +63,8 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
-    }
+    },
+    // Maybe will be needed for build (resource-loader plugin has to be client-side)
+    // vendor: ['resource-loader']
   }
 }

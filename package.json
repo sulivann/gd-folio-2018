@@ -18,6 +18,7 @@
     "node-sass": "^4.7.2",
     "nuxt": "^1.0.0",
     "nuxt-sass-resources-loader": "^1.2.0",
+    "resource-loader": "^2.1.1",
     "sass-loader": "^6.0.7",
     "smooth-scrollbar": "^8.2.7",
     "vue-parallaxy": "^1.1.1"

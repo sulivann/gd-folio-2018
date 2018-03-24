@@ -3,15 +3,15 @@
         <canvas class="home-project__title"></canvas>
         <div class="home-svgs__container container">
             <svg v-for="(project, index) in projects"
-                 :key="index" 
-                 class="home-svgs__project-title" 
-                 width="100%" height="100%" 
-                 :viewBox="project.svgTitleVB" 
+                 :key="index"
+                 class="home-svgs__project-title"
+                 width="100%" height="100%"
+                 :viewBox="project.svgTitleVB"
                  preserveAspectRatio="xMidYMid meet">
-                    <path class="project" :d="project.svgTitlePath" />                                
+                    <path class="project" :d="project.svgTitlePath" />
             </svg>
             <svg class="morph-shape" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
-                <path id="shape" style="fill: #000" />             
+                <path id="shape" style="fill: #000" />
             </svg>
         </div>
 
@@ -113,7 +113,7 @@ import 'gsap/CustomEase';
       this.$parent.$on('mousemove', this.checkTitleHover);
     },
     mounted() {
-      this.init();      
+      this.init();
     },
     beforeDestroy() {
       this.cancelEventListeners();
@@ -161,7 +161,7 @@ import 'gsap/CustomEase';
         }
         if (this.position === 'footer') {
           this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
-          this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);    
+          this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
           this.mainCanvas.ctx.translate(0, this.verticalIncrement*this.pageTransition.totalDuplications);
         }
       },
@@ -204,28 +204,28 @@ import 'gsap/CustomEase';
         }
 
         // If the title is not animating
-        if ((this.titleAnimation.isComplete === undefined && 
-             this.pageTransition.isComplete !== false && 
+        if ((this.titleAnimation.isComplete === undefined &&
+             this.pageTransition.isComplete !== false &&
              this.backHomeTransition.isComplete === undefined) || 
-            (this.title.pageTransition === undefined && 
-             this.titleAnimation.isComplete === undefined && 
+            (this.title.pageTransition === undefined &&
+             this.titleAnimation.isComplete === undefined &&
              this.backHomeTransition.isComplete === undefined)) {
           this.drawStaticTitle(data);
           return;
         }
-        // if title animation is on 
+        // if title animation is on
         if (this.titleAnimation.isComplete === false) {
           this.projectTransitionStart(data);
           return
-        } 
-        //  animation is finished, we remove the duplications        
-        if (this.titleAnimation.isComplete === true) {   
+        }
+        //  animation is finished, we remove the duplications
+        if (this.titleAnimation.isComplete === true) {
           this.projectTransitionEnd(data);
           return
         }
       },
 
-      /* 
+      /*
       * Draw the project title when no animation is going on
       */
       drawStaticTitle() {
@@ -246,9 +246,9 @@ import 'gsap/CustomEase';
         this.strokeFillClosePath(this.title.alpha);
       },
 
-      /* 
+      /*
       * Draw the first part of the project switch animation
-      * morph the hidden svg into the next title, and create duplications 
+      * morph the hidden svg into the next title, and create duplications
       * following the bezier curve.
       */
       projectTransitionStart(data) {
@@ -277,7 +277,7 @@ import 'gsap/CustomEase';
               // calculate alpha of duplicata
               const fillStroke = j / duplicates > 0.5 ? (j + 1) * 0.7 / duplicates : 0;
               this.strokeFillClosePath(fillStroke);
-              if (duplicates === this.titleAnimation.totalDuplications && j === duplicates - 1) {            
+              if (duplicates === this.titleAnimation.totalDuplications && j === duplicates - 1) {
                   this.easeSlideProjectAnimation(duplicates);
                   return;
               }
@@ -285,12 +285,12 @@ import 'gsap/CustomEase';
           this.tick++;
       },
 
-      /* 
+      /*
       * Draw the second part of the project switch transition
       * Remove the duplications until there's only one left
       */
       projectTransitionEnd(data) {
-          const duplicates = Math.trunc(Math.ceil(this.titleAnimation.duplications));   
+          const duplicates = Math.trunc(Math.ceil(this.titleAnimation.duplications));
           if (this.maxLength === 0) {
               this.maxLength = this.titleAnimation.totalDuplications - 1;
               this.canvasRatio = duplicates - 1;
@@ -314,17 +314,17 @@ import 'gsap/CustomEase';
               this.canvasRatio = 0;
               this.sizes.length = 0;
               this.titleAnimation.isComplete = undefined;
-              return;           
+              return;
             }
           }
           this.displayedDuplicatas--;
           this.tick--;
       },
 
-      /* 
+      /*
       * Draw the first part of the page transition animation
       * The title duplicates following the Bezier curve incrementation of the number x
-      * 
+      *
       */
       pageTransitionStart(data) {
         const duplicates = Math.trunc(Math.ceil(this.pageTransition.duplications));
@@ -345,7 +345,7 @@ import 'gsap/CustomEase';
           this.mainCanvas.ctx.beginPath();
           this.mainCanvas.ctx.strokeWidth = 2;
           this.drawSvg(this.states[j], ratioX, ratioY);
-            
+
           const fillStroke = 1;
           this.strokeFillClosePath(fillStroke);
           if(duplicates === this.pageTransition.totalDuplications && j === duplicates - 1){
@@ -356,10 +356,10 @@ import 'gsap/CustomEase';
         this.tick ++;
       },
 
-      /* 
+      /*
       * Draw the second part of the page transition animation
       * We remove the duplications following the Bezier curve decrementation of the number x
-      * 
+      *
       */
       pageTransitionEnd(data) {
         const duplicates = Math.trunc(Math.ceil(this.pageTransition.duplications));
@@ -412,11 +412,11 @@ import 'gsap/CustomEase';
         this.titleAnimation.totalDuplications = 70;
         this.tl.to(this.shape, 0.7,
           {
-              morphSVG: this.endShape[this.titleIndex], 
+              morphSVG: this.endShape[this.titleIndex],
               ease: Power2.easeOut,
               strokeWidth: 2,
           },
-          ).to(this.morphingSVG.el, 0.7, 
+          ).to(this.morphingSVG.el, 0.7,
           {
               attr: { viewBox: this.svgs[this.titleIndex].getAttribute('viewBox')},
               ease: Power2.easeOut,
@@ -428,7 +428,7 @@ import 'gsap/CustomEase';
           }, '-=1');
       },
 
-      /* 
+      /*
       * Draw path of svg from  Bezier points
       * params(points: array) the points to draws
       */
@@ -437,18 +437,18 @@ import 'gsap/CustomEase';
               this.mainCanvas.ctx.moveTo(p[0] * this.responsiveRatio + ratioX, p[1] * this.responsiveRatio + ratioY);
               for (let i = 2, len = p.length; i <= len;) {
                   this.mainCanvas.ctx.bezierCurveTo(
-                      p[i++] * this.responsiveRatio + ratioX, 
-                      p[i++] * this.responsiveRatio + ratioY, 
-                      p[i++] * this.responsiveRatio + ratioX, 
-                      p[i++] * this.responsiveRatio + ratioY, 
-                      p[i++] * this.responsiveRatio + ratioX, 
+                      p[i++] * this.responsiveRatio + ratioX,
+                      p[i++] * this.responsiveRatio + ratioY,
+                      p[i++] * this.responsiveRatio + ratioX,
+                      p[i++] * this.responsiveRatio + ratioY,
+                      p[i++] * this.responsiveRatio + ratioX,
                       p[i++] * this.responsiveRatio + ratioY
                   );
               }
           });
       },
 
-      /* 
+      /*
       * Close paths of svgs
       */
       strokeFillClosePath(strokeAlpha) {
@@ -482,7 +482,7 @@ import 'gsap/CustomEase';
           document.body.style.cursor = 'default';
         }
       },
-      
+
       setTitleAlpha(value) {
         TweenMax.to(this.title, 0.3, {
           alpha: value
@@ -490,9 +490,9 @@ import 'gsap/CustomEase';
       },
 
       mouseOverProjectTitle() {
-        return this.mouse.posX >= this.title.minX + this.morphingSVG.x && 
-               this.mouse.posX <= this.title.maxX + this.morphingSVG.x && 
-               this.mouse.posY >= this.title.minY + this.morphingSVG.visibleY && 
+        return this.mouse.posX >= this.title.minX + this.morphingSVG.x &&
+               this.mouse.posX <= this.title.maxX + this.morphingSVG.x &&
+               this.mouse.posY >= this.title.minY + this.morphingSVG.visibleY &&
                this.mouse.posY <= this.title.maxY
       },
 
@@ -525,7 +525,7 @@ import 'gsap/CustomEase';
       },
 
       routeToProject() {
-        this.$router.push('about');
+        this.$router.push(`/work/${this.projects[this.titleIndex].name}`);
       },
       defineResponsiveRatio() {
         const largestSvg = Object.keys(this.projectsSvg).reduce((a, b) => this.projectsSvg[a].viewBox.baseVal.width > this.projectsSvg[b].viewBox.baseVal.width ? a : b);
@@ -539,7 +539,7 @@ import 'gsap/CustomEase';
         this.mainCanvas.ctx.scale(ratio, ratio);
       },
 
-      /* 
+      /*
       * The main animation
       */
       render() {
@@ -571,7 +571,7 @@ import 'gsap/CustomEase';
            // const indexSvgHeight = svgs[4].viewBox.baseVal.height;
             this.mainCanvas.ctx.setTransform(1,0,0,1,0,0);
             this.updateMorphingValues();
-            this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);    
+            this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
             if (this.position === 'footer'){
               this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
             }
