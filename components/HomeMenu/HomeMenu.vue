@@ -1,8 +1,8 @@
 <template>
     <div class="home-menu">
       <ul class="home-menu__wrapper">
-        <li class="home-menu__label" 
-        v-for="(project, index) in projects" 
+        <li class="home-menu__label"
+        v-for="(project, index) in projects"
         v-bind:class="{ active: index === $store.state.activeIndex }"
         :key="index">{{ `0${index + 1}` }}</li>
       </ul>
@@ -36,7 +36,7 @@
       this.initEventListeners();
     },
     methods: {
-      
+
       init() {
         this.homeMenu = document.querySelector('.home-menu');
         this.menuWrapper = this.homeMenu.querySelector('.home-menu__wrapper');
