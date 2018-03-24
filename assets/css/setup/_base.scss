@@ -1,6 +1,13 @@
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   @include typo-base;
   background-color: $color-black;
+  overflow: auto;
+  height: 100%;
 }
 
 a {
