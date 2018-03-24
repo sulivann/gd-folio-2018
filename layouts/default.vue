@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/>
-    <!-- <nuxt v-if="!showLoader" /> -->
+    <nuxt v-if="showContent" />
   </div>
 </template>
 
@@ -48,6 +48,7 @@ export default {
         h: process.browser ? window.innerHeight : undefined,
       },
       showLoader: true,
+      showContent: false,
 
     }
   },
@@ -55,5 +56,22 @@ export default {
   components: {
     Loader,
   },
+
+  mounted() {
+    this.init();
+  },
+
+  methods: {
+    init() {
+      let subscribe = this.$store.subscribe((mutation, state) => {
+        if (mutation.type === 'SET_LOADERHIDDEN' && this.$store.state.loaderHidden === true) {
+          this.showContent = true;
+          setTimeout(() => {
+            this.showLoader = false;
+          }, 200);
+        }
+      })
+    }
+  }
 }
 </script>

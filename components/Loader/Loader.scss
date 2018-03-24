@@ -6,10 +6,10 @@ svg, canvas {
     left: 0;
     width: 100vw;
     height: 100vh;  
-    background:transparent;
+    background: black;
     pointer-events: none;
   }
-  .home-svgs__container{
+  .loading-home-svgs__container{
     position: absolute;
     overflow: hidden;
     display: flex;

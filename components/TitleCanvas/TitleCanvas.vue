@@ -121,6 +121,7 @@ import 'gsap/CustomEase';
     },
     methods: {
       init() {
+        console.log(this.title.alpha)
         // initialize canvas
         this.mainCanvas.el = document.querySelector('.home-project__title')
         this.mainCanvas.ctx = this.mainCanvas.el.getContext('2d');

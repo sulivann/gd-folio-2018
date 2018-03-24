@@ -5,6 +5,7 @@ const createStore = () => {
     state: {
       activeIndex: 0,
       homeBeenHovered: false,
+      loaderHidden: false,
     },
     getters: {
         activeIndex (state) {
@@ -12,6 +13,9 @@ const createStore = () => {
         },
         homeBeenHovered (state) {
           return state.homeBeenHovered
+        },
+        loadingHidden (state) {
+          return state.loadingHidden
         }
     },
     mutations: {
@@ -20,6 +24,9 @@ const createStore = () => {
         },
         SET_HOMEHOVER (state, homeBeenHovered) {
           state.homeBeenHovered = homeBeenHovered
+        },
+        SET_LOADERHIDDEN (state, loaderHidden) {
+          state.loaderHidden = loaderHidden
         }
       },
       actions: {
@@ -28,6 +35,9 @@ const createStore = () => {
         },
         setHomeHover ({ commit }, homeBeenHovered) {
           commit('SET_HOMEHOVER', homeBeenHovered)
+        },
+        setLoaderHidden ({ commit }, loaderHidden) {
+          commit('SET_LOADERHIDDEN', loaderHidden)
         }
       }
     })
