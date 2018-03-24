@@ -15,6 +15,8 @@ import HomeSubtitle from '~/components/HomeSubtitle/HomeSubtitle.vue';
 import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
 
 export default {
+  layout:'home',
+
   components: {
     HomeMenu,
     HomeImages,
@@ -52,7 +54,7 @@ export default {
           homeIMGSRC: 'https://i.imgur.com/I7xcJSr.jpg',
           svgTitleVB: '0 0 1053.54 135.3',
           svgTitlePath: 'M104.36,134.8H57.49L.75.5H43.16L82.22,109.87,123,.5H160.9Z M174.66.5h39.06V134.8H174.66Z M281.24,28H229.53V.5H372V28H320.3V134.8H281.24Z M427.44.5h46.69l69.75,134.3H500.17l-12.65-26.6H409.4l-13,26.6H356.2Zm21.58,26L421.49,83.27h54.13Z M561.36.5h39.06V107.27h75.89V134.8h-115Z M691.74.5H730.8V134.8H691.74Z M798.32,28H746.61V.5H889.09V28H837.38V134.8H798.32Z M953.07,87,892.62.5h48L975,57.79l34-57.29h43.53L992.13,87v47.8H953.07Z',
-        },  
+        },
       ],
       mouse: {
         posX: '',

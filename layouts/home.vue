@@ -1,6 +1,7 @@
 <template>
-  <div class="main" v-smooth-scroll>
-    <!-- <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/> -->
+  <div class="main">
+    <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/>
+    <nuxt v-if="showContent" />
     <nuxt />
   </div>
 </template>
