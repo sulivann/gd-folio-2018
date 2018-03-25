@@ -1,7 +1,6 @@
 .loading-home-project__title {
   z-index: 10;
   position: absolute;
-  background-color: black;
   top: 0;
   left: 0;
   width: 100vw;
@@ -19,6 +18,17 @@
 }
 
 .loading-home-project__title {
-  background-color: black;
   z-index: 1500;
+}
+
+
+.loading-canvas svg {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:transparent;
+  pointer-events: none;
 }

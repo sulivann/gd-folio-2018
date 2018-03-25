@@ -1,5 +1,5 @@
 <template>
-  <div class="title-canvas">
+  <div class="loading-canvas">
     <canvas class="loading-home-project__title"></canvas>
     <div class="loading-home-svgs__container loading-container">
       <svg v-for="(project, index) in projects"
@@ -44,6 +44,7 @@ export default {
         width: '',
         height: '',
       },
+      pixelRatio: '',
       canvasRatio: 0,
       projectsSvg: '',
       svgs: '',
@@ -114,6 +115,7 @@ export default {
   methods: {
     init() {
       // initialize canvas
+      this.pixelRatio = window.devicePixelRatio;
       this.mainCanvas.el = document.querySelector('.loading-home-project__title')
       this.mainCanvas.ctx = this.mainCanvas.el.getContext('2d');
       this.mainCanvas.width = this.viewport.w;
@@ -154,7 +156,7 @@ export default {
     },
 
     calculateMaxDuplications() {
-      return Math.trunc(Math.ceil((this.mainCanvas.el.height + this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / this.verticalIncrement)) + 5;
+      return Math.trunc(Math.ceil((this.mainCanvas.el.height / this.pixelRatio + this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / this.verticalIncrement)) + 5;
     },
 
     subscribeToStoreEvents() {
@@ -183,7 +185,7 @@ export default {
       // get width and height of morphed svg
       this.svgWidth = document.querySelector('#loading-shape').getBoundingClientRect().width
       this.svgHeight = Math.floor(document.querySelector('#loading-shape').getBoundingClientRect().height);
-      this.mainCanvas.ctx.clearRect(0, 0 - this.canvasRatio * this.verticalIncrement, this.mainCanvas.el.width, this.mainCanvas.el.height);
+      this.mainCanvas.ctx.clearRect(0, 0 - this.canvasRatio * this.verticalIncrement, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
 
       if (this.drawLoadingAnimation.isMorphing === undefined && this.loadingAnimation.isComplete === undefined) {
         this.drawStaticTitle(data);
@@ -219,12 +221,12 @@ export default {
       if (this.sizes.length === 0) {
         for (let i = 0; i < this.loadingAnimation.totalDuplications; i++){
           this.states[i] = this.toBezier(data);
-          this.sizes[i] = ((this.mainCanvas.el.width / 2) - this.svgWidth / (this.mainCanvas.el.width / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
+          this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
         }
       }
       for (let j = 0; j < duplicates; j++) {
         const ratioX = this.sizes[j];
-        let ratioY = this.mainCanvas.el.height - this.verticalIncrement * j;
+        let ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * j;
         this.title.minY = this.ratioY + (this.canvasRatio * this.verticalIncrement);
         this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
         if (ratioY <= this.canvasRatio * this.verticalIncrement - (this.title.maxY - this.title.minY) / 2) {
@@ -249,12 +251,12 @@ export default {
       if (this.sizes.length === 0) {
         for (let i = 0; i < this.loadingAnimation.totalDuplications; i++){
           this.states[i] = this.toBezier(data);
-          this.sizes[i] = ((this.mainCanvas.el.width / 2) - this.svgWidth / (this.mainCanvas.el.width / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
+          this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
         }
       }
       for (let j = 0; j < duplicates; j++) {
         const ratioX = this.sizes[j];
-        let ratioY = this.mainCanvas.el.height - this.verticalIncrement * (this.loadingAnimation.totalDuplications - j);
+        let ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * (this.loadingAnimation.totalDuplications - j);
         this.title.minY = this.ratioY + (this.canvasRatio * this.verticalIncrement);
         this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
         if (ratioY <= this.canvasRatio * this.verticalIncrement - (this.title.maxY - this.title.minY) / 2) {
@@ -292,11 +294,11 @@ export default {
       this.loadingAnimation.duplicatesIncrement = duplicates;
       for (let i = this.states.length; i < duplicates; i++ ){
         this.states[i] = this.toBezier(data);
-        this.sizes[i] = (this.mainCanvas.el.width / 2) - this.svgWidth / (this.mainCanvas.el.width / this.morphingSVG.visibleWidth) / 2 - this.morphingSVG.visibleX;
+        this.sizes[i] = (this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2 - this.morphingSVG.visibleX;
       }
       for (let j = 0; j < duplicates; j++ ) {
         const ratioX = this.sizes[j];
-        const ratioY = this.mainCanvas.el.height - this.verticalIncrement * j;
+        const ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * j;
         this.mainCanvas.ctx.beginPath();
         this.mainCanvas.ctx.strokeWidth = 2;
         // if (this.states[j] === undefined){
@@ -319,7 +321,7 @@ export default {
       const duplicates = Math.trunc(Math.ceil(this.loadingAnimation.duplications));
       for (let j = this.loadingAnimation.totalDuplications - 1 ; j >= this.loadingAnimation.totalDuplications - duplicates; j-- ) {
         const ratioX = this.sizes[j];
-        const ratioY = this.mainCanvas.el.height - this.verticalIncrement * j;
+        const ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * j;
         this.mainCanvas.ctx.beginPath();
         this.mainCanvas.ctx.strokeWidth = 2;
         // console.log(this.loadingAnimation.totalDuplications - j);
@@ -343,8 +345,8 @@ export default {
     * Draw the project title when no animation is going on
     */
     drawStaticTitle(data) {
-      const ratioX = ((this.mainCanvas.el.width / 2) - (this.svgWidth / (this.mainCanvas.el.width / this.morphingSVG.visibleWidth) / 2) - this.morphingSVG.visibleX);
-      const ratioY = this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2) - ((- 1)  + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
+      const ratioX = ((this.mainCanvas.el.width  / this.pixelRatio/ 2) - (this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2) - this.morphingSVG.visibleX);
+      const ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((- 1)  + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
       // define box position of the title for the hover
       this.title.minX = ratioX;
       this.title.maxX = this.title.minX + this.morphingSVG.visibleWidth;
@@ -470,10 +472,10 @@ export default {
     startMorphingTitle(position) {
       this.verticalIncrement = this.viewport.h / 200;
       if (position === 'center') {
-        this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height + this.morphingSVG.visibleHeight) / 2 / this.verticalIncrement)));
+        this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + this.morphingSVG.visibleHeight) / 2 / this.verticalIncrement)));
       } else {
         /* @TODO remplacer la taille du svg par celle correspondant au projet actif */
-        this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height + (this.morphingSVG.visibleHeight * 0.3) )/ (this.verticalIncrement))));
+        this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + (this.morphingSVG.visibleHeight * 0.3) )/ (this.verticalIncrement))));
       }
       this.sizes.length = 0;
       this.states.length = 0;
@@ -489,7 +491,7 @@ export default {
     },
 
     setDisplay() {
-      const ratio = 1;
+      const ratio = this.pixelRatio;
       this.mainCanvas.el.width  = this.viewport.w * ratio;
       this.mainCanvas.el.height = this.viewport.h * ratio;
       this.mainCanvas.ctx.scale(ratio, ratio);
@@ -499,7 +501,7 @@ export default {
     * The main animation
     */
     render() {
-      this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width, this.mainCanvas.el.height);
+      this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
       this.onUpdate();
       this.req = requestAnimationFrame(this.render);
     },

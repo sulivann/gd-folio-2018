@@ -44,6 +44,7 @@ import 'gsap/CustomEase';
         canvasRatio: 0,
         projectsSvg: '',
         svgs: '',
+        pixelRatio: '',
         shape: '',
         endShape: '',
         toBezier: '',
@@ -123,6 +124,7 @@ import 'gsap/CustomEase';
       init() {
         console.log(this.title.alpha)
         // initialize canvas
+        this.pixelRatio = window.devicePixelRatio;
         this.mainCanvas.el = document.querySelector('.home-project__title')
         this.mainCanvas.ctx = this.mainCanvas.el.getContext('2d');
         this.mainCanvas.width = this.viewport.w;
@@ -155,12 +157,12 @@ import 'gsap/CustomEase';
         this.setDisplay();
         this.render();
         if (this.position === 'header') {
-          this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
+          this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
           this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
           this.mainCanvas.ctx.translate(0, -this.verticalIncrement*this.pageTransition.totalDuplications);
         }
         if (this.position === 'footer') {
-          this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
+          this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
           this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
           this.mainCanvas.ctx.translate(0, this.verticalIncrement*this.pageTransition.totalDuplications);
         }
@@ -180,7 +182,7 @@ import 'gsap/CustomEase';
         // get width and height of morphed svg
         this.svgWidth = document.querySelector('#shape').getBoundingClientRect().width
         this.svgHeight = Math.floor(document.querySelector('#shape').getBoundingClientRect().height);
-        this.mainCanvas.ctx.clearRect(0, 0 - this.canvasRatio * this.verticalIncrement, this.mainCanvas.el.width, this.mainCanvas.el.height);
+        this.mainCanvas.ctx.clearRect(0, 0 - this.canvasRatio * this.verticalIncrement, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
 
         // first part of the title animation on click
         if (this.pageTransition.isComplete === false) {
@@ -232,8 +234,8 @@ import 'gsap/CustomEase';
         const data = this.shape.getAttribute("d");
         this.svgWidth = document.querySelector('#shape').getBoundingClientRect().width
         this.svgHeight = Math.floor(document.querySelector('#shape').getBoundingClientRect().height);
-        const ratioX = ((this.mainCanvas.el.width / 2) - (this.svgWidth / (this.mainCanvas.el.width / this.morphingSVG.visibleWidth) / 2) - this.morphingSVG.visibleX);
-        const ratioY = this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + this.pageTransition.totalDuplications - 1) + this.sizes.length - this.pageTransition.totalDuplications + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
+        const ratioX = ((this.mainCanvas.el.width / this.pixelRatio / 2) - (this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2) - this.morphingSVG.visibleX);
+        const ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + this.pageTransition.totalDuplications - 1) + this.sizes.length - this.pageTransition.totalDuplications + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
         // define box position of the title for the hover
         this.title.minX = ratioX;
         this.title.maxX = this.title.minX + this.morphingSVG.visibleWidth;
@@ -262,11 +264,11 @@ import 'gsap/CustomEase';
           this.titleAnimation.duplicatesIncrement = duplicates;
           for (let i = this.states.length; i < duplicates; i++ ){
               this.states[i] = (this.toBezier(data));
-              this.sizes[i] = ((this.mainCanvas.el.width / 2) - this.svgWidth / (this.mainCanvas.el.width / this.morphingSVG.visibleWidth) / 2 - this.morphingSVG.visibleX)
+              this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2 - this.morphingSVG.visibleX)
           }
           for (let j = 0; j < duplicates; j++ ) {
               const ratioX = this.sizes[j];
-              const ratioY = this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j) * this.verticalIncrement) - this.morphingSVG.visibleY;
+              const ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j) * this.verticalIncrement) - this.morphingSVG.visibleY;
               this.mainCanvas.ctx.beginPath();
               this.mainCanvas.ctx.strokeWidth = 2;
               if (this.states[j] === undefined){
@@ -300,7 +302,7 @@ import 'gsap/CustomEase';
           this.titleAnimation.duplicatesIncrement = duplicates;
           for (let j = 0; j < duplicates; j++ ) {
             const ratioX = this.sizes[j + this.sizes.length - duplicates];
-            const ratioY = this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j) * this.verticalIncrement) - this.morphingSVG.visibleY;;
+            const ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j) * this.verticalIncrement) - this.morphingSVG.visibleY;;
             this.mainCanvas.ctx.beginPath();
             this.mainCanvas.ctx.strokeWidth = 2;
             this.drawSvg(this.states[j + this.titleAnimation.totalDuplications - duplicates], ratioX, ratioY);
@@ -331,12 +333,12 @@ import 'gsap/CustomEase';
         if (duplicates === 0) {
           for (let i = 0; i < this.pageTransition.totalDuplications; i++){
             this.states[i] = this.toBezier(data);
-            this.sizes[i] = ((this.mainCanvas.el.width / 2) - this.svgWidth / (this.mainCanvas.el.width / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
+            this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
           }
         }
         for (let j = 0; j <= duplicates; j++) {
           const ratioX = this.sizes[j];
-          let ratioY = this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j + 1) * this.verticalIncrement) - this.morphingSVG.visibleY;
+          let ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j + 1) * this.verticalIncrement) - this.morphingSVG.visibleY;
           this.title.minY = this.ratioY + (this.canvasRatio * this.verticalIncrement);
           this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
           if (ratioY <= this.canvasRatio * this.verticalIncrement - (this.title.maxY - this.title.minY) / 2) {
@@ -370,7 +372,7 @@ import 'gsap/CustomEase';
         }
         for (let j = 0; j < duplicates; j++ ) {
           const ratioX = this.sizes[j + this.sizes.length - duplicates];
-          const ratioY = this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j) + this.sizes.length - duplicates + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
+          const ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((this.maxRatio + j) + this.sizes.length - duplicates + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
           this.mainCanvas.ctx.beginPath();
           this.mainCanvas.ctx.strokeWidth = 2;
           this.drawSvg(this.states[j], ratioX, ratioY);
@@ -503,7 +505,7 @@ import 'gsap/CustomEase';
       transitionToProject() {
         this.pageTransition.hasStarted = true;
         document.body.style.cursor = 'default';
-        this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
+        this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
         if (this.pageTransition.isComplete === undefined) {
           this.maxLength = 0;
           this.tick = 0;
@@ -533,7 +535,7 @@ import 'gsap/CustomEase';
       },
 
       setDisplay() {
-        const ratio = 1;
+        const ratio = window.devicePixelRatio;
         this.mainCanvas.el.width  = this.viewport.w * ratio;
         this.mainCanvas.el.height = this.viewport.h * ratio;
         this.mainCanvas.ctx.scale(ratio, ratio);
@@ -543,7 +545,7 @@ import 'gsap/CustomEase';
       * The main animation
       */
       render() {
-        this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width, this.mainCanvas.el.height);
+        this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
         this.onUpdate();
         this.req = requestAnimationFrame(this.render);
       },
@@ -573,7 +575,7 @@ import 'gsap/CustomEase';
             this.updateMorphingValues();
             this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
             if (this.position === 'footer'){
-              this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
+              this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
             }
             this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
             // mainCanvas.ctx.setTransform(1,0,0,1,0, -canvasRatio * verticalIncrement);
