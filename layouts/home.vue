@@ -2,7 +2,7 @@
   <div class="main">
     <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/>
     <nuxt v-if="showContent" />
-    <nuxt />
+    <!-- <nuxt /> -->
   </div>
 </template>
 
@@ -81,5 +81,79 @@ export default {
   .main {
     height: 100vh;
     width: 100%;
+    background-color: #0D0D0D;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  &::before {
+      content: '';
+      z-index: 0;
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background: url('https://anatacreative.com/codepen/noise.png');
+      opacity: 0.8;
+      animation: 2s steps(10) infinite noise;
+      pointer-events: none;
   }
+  &::after {
+      content: '';
+      z-index: -10;
+      position: absolute;
+      top: 0;
+      width: 100vh;
+      height: 100vh;
+      border-radius: 50%;
+      background: -moz-radial-gradient(center, ellipse cover,  rgba(255, 255, 255, 0.05) 0%, transparent); /* FF3.6-15 */
+      background: -webkit-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0.05) 0%, transparent); /* Chrome10-25,Safari5.1-6 */
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      mix-blend-mode: soft-light;
+      //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1affffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  }
+}
+
+@keyframes noise {
+0%, 100% {
+    transform: translate(0,0);
+  }
+
+  10% {
+    transform: translate(-5,-10%);
+  }
+
+  20% {
+    transform: translate(-15,5%);
+  }
+
+  30% {
+    transform: translate(7%,-25%);
+  }
+
+  40% {
+    transform: translate(20%,25%);
+  }
+
+  50% {
+    transform: translate(-5,-10%);
+  }
+
+  60% {
+    transform: translate(-15,5%);
+  }
+
+  70% {
+    transform: translate(7%,-25%);
+  }
+
+  80% {
+    transform: translate(20%,25%);
+  }
+
+  90% {
+    transform: translate(-5,-10%);
+  }
+}
 </style>
