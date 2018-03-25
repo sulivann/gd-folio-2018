@@ -51,7 +51,6 @@ import { TweenMax, Power2 } from 'gsap';
           }
         })
       },
-
       imgUpdate() {
           this.imgFadeOut();
           if(this.$store.getters.homeBeenHovered){
@@ -88,7 +87,7 @@ import { TweenMax, Power2 } from 'gsap';
           x: '-50%',
           y: '-50%',
         }, 0.06);
-      }
-    }
+      },
+   },
 }
 </script>

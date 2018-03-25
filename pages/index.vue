@@ -1,13 +1,15 @@
 <template>
-  <div class="home">
-    <!-- <home-case /> -->
-    <title-canvas :projects="projects" :viewport="viewport" :position="position"/>
-    <home-images :projects="projects" :viewport="viewport" />
-    <home-menu :projects="projects" />
-    <home-subtitle :projects="projects" />
-  </div>
+    <main class="home">
+      <!-- <home-case /> -->
+      <title-canvas :projects="projects" :viewport="viewport" :position="position"/>
+      <home-images :projects="projects" :viewport="viewport" />
+      <home-menu :projects="projects" />
+      <home-subtitle :projects="projects" />
+    </main>
 </template>
 <script>
+import { TimelineMax, TweenMax, Sine } from 'gsap';
+
 // import HomeCase from '~/components/HomeCase/HomeCase.vue';
 import HomeMenu from '~/components/HomeMenu/HomeMenu.vue';
 import HomeImages from '~/components/HomeImages/HomeImages.vue';
@@ -15,7 +17,20 @@ import HomeSubtitle from '~/components/HomeSubtitle/HomeSubtitle.vue';
 import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
 
 export default {
-  layout:'home',
+  transition: {
+    mode: 'out-in',
+    css: false,
+    leave (el, done) {
+      let tl = new TimelineMax({ onComplete: done });
+      const homeImages = document.querySelector('.home-images');
+
+      tl.add('leave');
+      tl.to(homeImages, 0.7, {
+        opacity: 0,
+        ease: Sine.easeIn
+      }, 'leave');
+    }
+  },
 
   components: {
     HomeMenu,
@@ -83,6 +98,6 @@ export default {
       this.mouse.posY = e.clientY;
       this.$emit('mousemove', this.mouse)
     }
-  }
+  },
 }
 </script>

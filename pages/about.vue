@@ -1,12 +1,12 @@
 <template>
-  <div class="about">
+  <main class="about">
     <about-aside />
     <div class="about__wrapper">
       <about-heading />
       <about-description />
       <about-links />
     </div>
-  </div>
+  </main>
 </template>
 
 <style lang="scss">
@@ -25,6 +25,7 @@
 </style>
 
 <script>
+
 // Components
 import AboutHeading from '~/components/AboutHeading/AboutHeading.vue';
 import AboutDescription from '~/components/AboutDescription/AboutDescription.vue';

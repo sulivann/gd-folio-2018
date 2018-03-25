@@ -530,7 +530,7 @@ export default {
         this.mainCanvas.ctx.setTransform(1,0,0,1,0,0);
         this.updateMorphingValues();
         this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
-        // this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
+        this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
         // mainCanvas.ctx.setTransform(1,0,0,1,0, -canvasRatio * verticalIncrement);
       }, 100);
     },

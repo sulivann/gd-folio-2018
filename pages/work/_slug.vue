@@ -1,5 +1,5 @@
 <template>
-  <div class="work">
+  <div class="work" v-smooth-scroll>
     <title-canvas :projects="projects" :viewport="viewport" position="header"/>
     <case-heading
       :role="data.role"
@@ -24,6 +24,18 @@
     </div>
   </div>
 </template>
+
+<style lang="scss">
+  .work {
+    height: 100vh;
+    width: 100%;
+    background-color: #0D0D0D;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
 
 <script>
 // Data

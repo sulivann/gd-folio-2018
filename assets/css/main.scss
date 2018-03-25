@@ -3,13 +3,3 @@
 @import 'setup/reset';
 @import 'setup/fonts';
 @import 'setup/base';
-
-/**
- * Transitions temporary used
- */
-.page-enter-active, .page-leave-active {
-  // transition: opacity .5s;
-}
-.page-enter, .page-leave-to {
-  opacity: 0;
-}
