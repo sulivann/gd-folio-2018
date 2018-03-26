@@ -129,7 +129,7 @@ import 'gsap/CustomEase';
         this.mainCanvas.ctx = this.mainCanvas.el.getContext('2d');
         this.mainCanvas.width = this.viewport.w;
         this.mainCanvas.height = this.viewport.h;
-        this.verticalIncrement = this.viewport.h / 220;
+        this.verticalIncrement = this.viewport.h / 220 * this.pixelRatio;
         this.incrementDirection = this.position === 'header' ? -1 : 1;
         this.projectsSvg = document.querySelectorAll('.home-svgs__project-title');
         this.svgs = document.querySelectorAll('svg');
@@ -411,7 +411,7 @@ import 'gsap/CustomEase';
       },
 
       morphTitle() {
-        this.titleAnimation.totalDuplications = 70;
+        this.titleAnimation.totalDuplications = 70 / this.pixelRatio;
         this.tl.to(this.shape, 0.7,
           {
               morphSVG: this.endShape[this.titleIndex],
@@ -554,31 +554,28 @@ import 'gsap/CustomEase';
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() =>  {
         // Run code here, resizing has "stopped"
-            this.viewport.w = window.innerWidth
-            this.viewport.h = window.innerHeight
-            this.mainCanvas.width = window.innerWidth;
-            this.mainCanvas.height = window.innerHeight;
-            this.mainCanvas.el.height = this.viewport.h;
-            this.mainCanvas.el.width = this.viewport.w;
-            this.verticalIncrement = this.viewport.h / 220;
-            this.responsiveRatio = this.defineResponsiveRatio();
-            this.mainCanvas.width = window.innerWidth;
-            this.mainCanvas.height = window.innerHeight;
-            this.mainCanvas.el.height = this.viewport.h;
-            this.mainCanvas.el.width = this.viewport.w;
+        this.viewport.w = window.innerWidth;
+        this.viewport.h = window.innerHeight;
+        this.mainCanvas.width = this.viewport.w;
+        this.mainCanvas.height = this.viewport.h;
+        this.mainCanvas.el.height = this.viewport.h * this.pixelRatio;
+        this.mainCanvas.el.width = this.viewport.w * this.pixelRatio;
+        this.verticalIncrement = this.viewport.h / (110 / this.pixelRatio);
+        this.responsiveRatio = this.defineResponsiveRatio();
+        // this.mainCanvas.width = window.innerWidth;
+        // this.mainCanvas.height = window.innerHeight;
+        // this.mainCanvas.el.height = this.viewport.h;
+        // this.mainCanvas.el.width = this.viewport.w;
 
-            // this.checkMobileLayout();
-            //this.mainCanvas.setWidth();
-            // const indexSvgY = svgs[4].viewBox.baseVal.y;
-           // const indexSvgHeight = svgs[4].viewBox.baseVal.height;
-            this.mainCanvas.ctx.setTransform(1,0,0,1,0,0);
-            this.updateMorphingValues();
-            this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
-            if (this.position === 'footer'){
-              this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
-            }
-            this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
-            // mainCanvas.ctx.setTransform(1,0,0,1,0, -canvasRatio * verticalIncrement);
+        // this.checkMobileLayout();
+        //this.mainCanvas.setWidth();
+        // const indexSvgY = svgs[4].viewBox.baseVal.y;
+        // const indexSvgHeight = svgs[4].viewBox.baseVal.height;
+        this.mainCanvas.ctx.setTransform(this.pixelRatio,0,0,this.pixelRatio,0,0);
+        this.updateMorphingValues();
+        this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
+        // this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
+        // mainCanvas.ctx.setT
         }, 100);
       },
 
