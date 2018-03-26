@@ -25,6 +25,7 @@
         menuWrapper: '',
         menuSideLine: '',
         projectsIndex: '',
+        subscribe: '',
         tl: new TimelineMax(),
       }
     },
@@ -35,8 +36,12 @@
       this.setMenuAlpha();
       this.initEventListeners();
     },
+    beforeDestroy() {
+      this.subscribe;
+      this.removeEventListeners();
+    },
     methods: {
-
+      
       init() {
         this.homeMenu = document.querySelector('.home-menu');
         this.menuWrapper = this.homeMenu.querySelector('.home-menu__wrapper');
@@ -45,6 +50,13 @@
         this.tl.to(this.menuWrapper, 0, {
           y: -(this.$store.getters.activeIndex) * (this.menuWrapper.getBoundingClientRect().height / this.projectsIndex.length),
         })
+
+        this.subscribe = this.$store.subscribe((mutation, state) => {
+          if (mutation.type === 'SET_ACTIVEINDEX') {
+            this.translateList();
+            this.setMenuAlpha();
+        }
+      });
       },
 
       setMenuAlpha() {
@@ -85,6 +97,10 @@
         this.$store.dispatch('setActiveIndex', value);
         this.projectsIndex[this.$store.getters.activeIndex].classList.add('active');
         this.setMenuAlpha();
+        this.translateList();
+      },
+
+      translateList() {
         this.tl.to(this.menuWrapper, 0.5, {
             y: -(this.$store.getters.activeIndex) * (this.menuWrapper.getBoundingClientRect().height / this.projectsIndex.length),
             ease: Power2.easeOut,
@@ -102,6 +118,12 @@
         }
         return index;
       },
+      removeEventListeners () {
+        this.projectsIndex.forEach((index) => {
+          index.removeEventListeners('mouseenter', () => { this.updateMenuLine(index, 0.7) });
+          index.removeEventListeners('mouseleave', () => { this.updateMenuLine(index, 1) })
+        });
+      }
     },
   }
 </script>
