@@ -97,12 +97,9 @@ export default {
         duplicatesIncrement: 0,
         totalDuplications: 0,
       },
-      tl: new TimelineMax(),
+      tl: new TimelineMax()
     }
   },
-  components: {
-  },
-  created() {},
   mounted() {
     this.init();
     this.load();
@@ -121,6 +118,8 @@ export default {
       this.mainCanvas.width = this.viewport.w;
       this.mainCanvas.height = this.viewport.h;
       this.verticalIncrement = this.viewport.h / 100;
+      this.position =  this.$route.name === 'index' ? 'center' : 'header';
+      console.log(this.position);
       this.incrementDirection = this.position === 'header' ? -1 : 1;
       this.projectsSvg = document.querySelectorAll('.loading-home-svgs__project-title');
       // this.svgs = document.querySelectorAll('svg .loading-svgs');
@@ -421,7 +420,7 @@ export default {
 
     manageNextAnimationLoop() {
       if (this.hasLoaded) {
-        this.startMorphingTitle('center');
+        this.startMorphingTitle(this.position);
       } else {
         this.startDuplications();
       }
@@ -530,7 +529,7 @@ export default {
         this.mainCanvas.ctx.setTransform(1,0,0,1,0,0);
         this.updateMorphingValues();
         this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
-        this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
+        // this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
         // mainCanvas.ctx.setTransform(1,0,0,1,0, -canvasRatio * verticalIncrement);
       }, 100);
     },
