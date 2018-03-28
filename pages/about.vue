@@ -6,6 +6,7 @@
       <about-description />
       <about-links />
     </div>
+    <about-face />
   </main>
 </template>
 
@@ -31,13 +32,15 @@ import AboutHeading from '~/components/AboutHeading/AboutHeading.vue';
 import AboutDescription from '~/components/AboutDescription/AboutDescription.vue';
 import AboutLinks from '~/components/AboutLinks/AboutLinks.vue';
 import AboutAside from '~/components/AboutAside/AboutAside.vue';
+import AboutFace from '~/components/AboutFace/AboutFace.vue';
 
 export default {
   components: {
     AboutHeading,
     AboutDescription,
     AboutLinks,
-    AboutAside
+    AboutAside,
+    AboutFace
   }
 };
 </script>
