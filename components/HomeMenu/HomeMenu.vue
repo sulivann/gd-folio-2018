@@ -41,7 +41,7 @@
       this.removeEventListeners();
     },
     methods: {
-      
+
       init() {
         this.homeMenu = document.querySelector('.home-menu');
         this.menuWrapper = this.homeMenu.querySelector('.home-menu__wrapper');
@@ -49,7 +49,12 @@
         this.projectsIndex = this.menuWrapper.querySelectorAll('.home-menu__label');
         this.tl.to(this.menuWrapper, 0, {
           y: -(this.$store.getters.activeIndex) * (this.menuWrapper.getBoundingClientRect().height / this.projectsIndex.length),
-        })
+        });
+
+        TweenMax.to(this.$el, 0.7, {
+          opacity: 1,
+          easing: Power2.easeOut
+        });
 
         this.subscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
