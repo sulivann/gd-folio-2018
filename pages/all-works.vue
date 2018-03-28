@@ -1,21 +1,94 @@
 <template>
-  <div>
-    <div class="main">
-      <!-- <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/> -->
-      <nuxt />
+  <main class="all-works">
+    <title-canvas :projects="projects" :viewport="viewport" :position="position"/>
+    <div class="all-works__separators">
+      <div class="all-works__separator"></div>
+      <div class="all-works__separator"></div>
+      <div class="all-works__separator"></div>
     </div>
-  </div>
+    <div class="all-works__case-numbers">
+      <div class="all-works__case-number">01</div>
+      <div class="all-works__case-number">02</div>
+      <div class="all-works__case-number">03</div>
+      <div class="all-works__case-number">04</div>
+    </div>
+    <div class="all-works__background">
+      <div class="all-works__backgroundImg"></div>
+    </div>
+  </main>
 </template>
 
-<script>
+<style lang="scss">
+  .all-works {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
 
-import Loader from '~/components/Loader/Loader.vue';
+  .all-works__separator {
+    height: 100%;
+    width: 1px;
+    background-color: white;
+    opacity: 0.1;
+    position: absolute;
+  }
+
+  .all-works__separator:nth-child(1) {
+    left: 25%;
+  }
+
+  .all-works__separator:nth-child(2) {
+    left: 50%;
+  }
+
+  .all-works__separator:nth-child(3) {
+    left: 75%;
+  }
+
+  .all-works__case-number {
+    position: absolute;
+    bottom: $space-x-large;
+    transform: translateX(-50%);
+    font-family: $font-family-heading;
+  }
+
+  .all-works__case-number:nth-child(1) {
+    left: 12.5%;
+  }
+
+  .all-works__case-number:nth-child(2) {
+    left: 37.5%;
+  }
+
+  .all-works__case-number:nth-child(3) {
+    left: 62.5%;
+  }
+
+  .all-works__case-number:nth-child(4) {
+    left: 87.5%;
+  }
+
+  .all-works__backgroundImg {
+    background-image: url('~/static/img/badass/mock_up_01.png');
+    background-size: cover;
+    background-position: 0% center;
+    width: 20%;
+    height: 100vh;
+    transform: translateX(-100%);
+  }
+</style>
+
+<script>
+import { TweenMax } from 'gsap';
+import 'gsap/CustomEase';
+
+// Components
+import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
 
 export default {
-
   data() {
     return {
-        projects: [
+      projects: [
         {
           name: 'tesla',
           homeSubtitle: 'Coucou plop',
@@ -45,113 +118,32 @@ export default {
           svgTitlePath: 'M104.36,134.8H57.49L.75.5H43.16L82.22,109.87,123,.5H160.9Z M174.66.5h39.06V134.8H174.66Z M281.24,28H229.53V.5H372V28H320.3V134.8H281.24Z M427.44.5h46.69l69.75,134.3H500.17l-12.65-26.6H409.4l-13,26.6H356.2Zm21.58,26L421.49,83.27h54.13Z M561.36.5h39.06V107.27h75.89V134.8h-115Z M691.74.5H730.8V134.8H691.74Z M798.32,28H746.61V.5H889.09V28H837.38V134.8H798.32Z M953.07,87,892.62.5h48L975,57.79l34-57.29h43.53L992.13,87v47.8H953.07Z',
         },
       ],
+      scrolling: false,
+      mouse: {
+        posX: '',
+        posY: '',
+      },
       viewport: {
         w: process.browser ? window.innerWidth : undefined,
         h: process.browser ? window.innerHeight : undefined,
       },
-      showLoader: true,
-      showContent: false,
+      position: 'central'
     }
   },
-
-  components: {
-    Loader,
-  },
-
   mounted() {
-    this.init();
-  },
-
-  methods: {
-    init() {
-      let subscribe = this.$store.subscribe((mutation, state) => {
-        if (mutation.type === 'SET_LOADERHIDDEN' && this.$store.state.loaderHidden === true) {
-          this.showContent = true;
-          setTimeout(() => {
-            this.showLoader = false;
-          }, 200);
-        }
+    this.background = document.querySelector('.all-works__backgroundImg');
+    setTimeout(() => {
+      TweenMax.to(this.background, 0.4, {
+        backgroundPosition: "100% center",
+        x: "500%",
+        force3D:true,
+        ease: CustomEase.create('custom", "0.86, 0, 0.07, 1')
       });
-    }
+    this.$store.dispatch('setActiveIndex', 2);
+    }, 2000);
+  },
+  components: {
+    TitleCanvas,
   }
-}
+};
 </script>
-
-<style lang="scss">
-  .main {
-    height: 100vh;
-    width: 100%;
-    background-color: #0D0D0D;
-
-    &::before {
-      content: '';
-      z-index: 0;
-      position: absolute;
-      top: -100%;
-      left: -100%;
-      width: 300%;
-      height: 300%;
-      background: url('https://anatacreative.com/codepen/noise.png');
-      opacity: 0.8;
-      animation: 2s steps(10) infinite noise;
-      pointer-events: none;
-    }
-
-    &::after {
-      content: '';
-      z-index: -10;
-      position: absolute;
-      top: 0;
-      width: 100vh;
-      height: 100vh;
-      border-radius: 50%;
-      background: -moz-radial-gradient(center, ellipse cover,  rgba(255, 255, 255, 0.05) 0%, transparent); /* FF3.6-15 */
-      background: -webkit-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0.05) 0%, transparent); /* Chrome10-25,Safari5.1-6 */
-      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-      mix-blend-mode: soft-light;
-      //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1affffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    }
-  }
-
-  @keyframes noise {
-  0%, 100% {
-      transform: translate(0,0);
-    }
-
-    10% {
-      transform: translate(-5,-10%);
-    }
-
-    20% {
-      transform: translate(-15,5%);
-    }
-
-    30% {
-      transform: translate(7%,-25%);
-    }
-
-    40% {
-      transform: translate(20%,25%);
-    }
-
-    50% {
-      transform: translate(-5,-10%);
-    }
-
-    60% {
-      transform: translate(-15,5%);
-    }
-
-    70% {
-      transform: translate(7%,-25%);
-    }
-
-    80% {
-      transform: translate(20%,25%);
-    }
-
-    90% {
-      transform: translate(-5,-10%);
-    }
-  }
-</style>
