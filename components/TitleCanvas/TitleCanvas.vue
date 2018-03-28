@@ -523,7 +523,7 @@ import 'gsap/CustomEase';
         }
         setTimeout(() => {
           this.routeToProject();
-        }, 2000);
+        }, 1000);
       },
 
       routeToProject() {

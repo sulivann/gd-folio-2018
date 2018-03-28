@@ -29,7 +29,6 @@
   .work {
     height: 100vh;
     width: 100%;
-    background-color: #0D0D0D;
     overflow: hidden;
     display: flex;
     justify-content: center;
