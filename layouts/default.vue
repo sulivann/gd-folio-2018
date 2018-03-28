@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="main">
-      <!-- <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/> -->
-      <nuxt />
+      <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/>
+      <nuxt v-if="showContent" />
     </div>
   </div>
 </template>
