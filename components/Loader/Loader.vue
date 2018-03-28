@@ -117,10 +117,8 @@ export default {
       this.mainCanvas.ctx = this.mainCanvas.el.getContext('2d');
       this.mainCanvas.width = this.viewport.w;
       this.mainCanvas.height = this.viewport.h;
-      this.verticalIncrement = this.viewport.h / 100;
-      this.position =  this.$route.name === 'index' ? 'center' : 'header';
-      console.log(this.position);
-      this.incrementDirection = this.position === 'header' ? -1 : 1;
+      this.verticalIncrement = this.viewport.h / 100 * this.pixelRatio;
+      this.finalPosition = this.$route.name === 'index' ? 'center' : 'header';
       this.projectsSvg = document.querySelectorAll('.loading-home-svgs__project-title');
       // this.svgs = document.querySelectorAll('svg .loading-svgs');
       this.shape = document.querySelector("#loading-shape")
@@ -130,6 +128,9 @@ export default {
       this.morphingSVG.el = document.querySelector('.loading-morph-shape');
       this.shape.setAttribute('d', document.querySelector('#loading').getAttribute('d'));
       this.morphingSVG.el.setAttribute('viewBox', document.querySelector('.loading-shape').getAttribute('viewBox'));
+      
+      // this.incrementDirection = this.position === 'header' ? -1 : 1;
+
       this.updateMorphingValues();
       // Subscribe to state project update
       this.subscribeToStoreEvents();
@@ -345,12 +346,12 @@ export default {
     */
     drawStaticTitle(data) {
       const ratioX = ((this.mainCanvas.el.width  / this.pixelRatio/ 2) - (this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2) - this.morphingSVG.visibleX);
-      const ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((- 1)  + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
-      // define box position of the title for the hover
-      this.title.minX = ratioX;
-      this.title.maxX = this.title.minX + this.morphingSVG.visibleWidth;
-      this.title.minY = ratioY + (this.canvasRatio * this.verticalIncrement);
-      this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
+      let ratioY;
+      if (this.finalPosition == 'center') {
+        ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((- 1)  + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
+      } else if (this.finalPosition == 'header') {
+        ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * this.loadingAnimation.totalDuplications - 1;
+      }
       this.mainCanvas.ctx.beginPath();
       this.mainCanvas.ctx.strokeWidth = 2;
       const bezierpoints = this.toBezier(data);
@@ -420,7 +421,7 @@ export default {
 
     manageNextAnimationLoop() {
       if (this.hasLoaded) {
-        this.startMorphingTitle(this.position);
+        this.startMorphingTitle(this.finalPosition);
       } else {
         this.startDuplications();
       }
@@ -440,7 +441,7 @@ export default {
     startDuplications() {
       this.loadingAnimation.isComplete = false;
       this.loadingAnimation.duplications = 0;
-      this.loadingAnimation.totalDuplications = this.calculateMaxDuplications();
+      this.loadingAnimation.totalDuplications = this.calculateMaxDuplications() * 2;
       TweenMax.to(this.loadingAnimation, 1.2,
       {
         duplications: this.loadingAnimation.totalDuplications,
@@ -469,7 +470,7 @@ export default {
     },
 
     startMorphingTitle(position) {
-      this.verticalIncrement = this.viewport.h / 200;
+      this.verticalIncrement = this.viewport.h / 200 * this.pixelRatio;
       if (position === 'center') {
         this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + this.morphingSVG.visibleHeight) / 2 / this.verticalIncrement)));
       } else {
@@ -485,8 +486,9 @@ export default {
     },
 
     defineResponsiveRatio() {
-      const largestSvg = Object.keys(this.projectsSvg).reduce((a, b) => this.projectsSvg[a].viewBox.baseVal.width > this.projectsSvg[b].viewBox.baseVal.width ? a : b);
-      return this.viewport.w * 0.8 < this.projectsSvg[largestSvg].viewBox.baseVal.width ? this.viewport.w * 0.8 / this.projectsSvg[largestSvg].viewBox.baseVal.width : 1;
+      const svgsToCompute = [...this.projectsSvg].concat([document.querySelector('.loading-shape')]);
+      const largestSvg = Object.keys(svgsToCompute).reduce((a, b) => svgsToCompute[a].viewBox.baseVal.width > svgsToCompute[b].viewBox.baseVal.width ? a : b);
+      return this.viewport.w * 0.8 < svgsToCompute[largestSvg].viewBox.baseVal.width ? this.viewport.w * 0.8 / svgsToCompute[largestSvg].viewBox.baseVal.width : 1;
     },
 
     setDisplay() {
@@ -509,24 +511,24 @@ export default {
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() =>  {
         // Run code here, resizing has "stopped"
-        this.viewport.w = window.innerWidth
-        this.viewport.h = window.innerHeight
-        this.mainCanvas.width = window.innerWidth;
-        this.mainCanvas.height = window.innerHeight;
-        this.mainCanvas.el.height = this.viewport.h;
-        this.mainCanvas.el.width = this.viewport.w;
-        this.verticalIncrement = this.viewport.h / 220;
+        this.viewport.w = window.innerWidth;
+        this.viewport.h = window.innerHeight;
+        this.mainCanvas.width = this.viewport.w;
+        this.mainCanvas.height = this.viewport.h;
+        this.mainCanvas.el.height = this.viewport.h * this.pixelRatio;
+        this.mainCanvas.el.width = this.viewport.w * this.pixelRatio;
+        this.verticalIncrement = this.viewport.h / (110 / this.pixelRatio);
         this.responsiveRatio = this.defineResponsiveRatio();
-        this.mainCanvas.width = window.innerWidth;
-        this.mainCanvas.height = window.innerHeight;
-        this.mainCanvas.el.height = this.viewport.h;
-        this.mainCanvas.el.width = this.viewport.w;
+        // this.mainCanvas.width = window.innerWidth;
+        // this.mainCanvas.height = window.innerHeight;
+        // this.mainCanvas.el.height = this.viewport.h;
+        // this.mainCanvas.el.width = this.viewport.w;
 
         // this.checkMobileLayout();
         //this.mainCanvas.setWidth();
         // const indexSvgY = svgs[4].viewBox.baseVal.y;
         // const indexSvgHeight = svgs[4].viewBox.baseVal.height;
-        this.mainCanvas.ctx.setTransform(1,0,0,1,0,0);
+        this.mainCanvas.ctx.setTransform(this.pixelRatio,0,0,this.pixelRatio,0,0);
         this.updateMorphingValues();
         this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
         // this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
