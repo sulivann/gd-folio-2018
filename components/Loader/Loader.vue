@@ -97,12 +97,9 @@ export default {
         duplicatesIncrement: 0,
         totalDuplications: 0,
       },
-      tl: new TimelineMax(),
+      tl: new TimelineMax()
     }
   },
-  components: {
-  },
-  created() {},
   mounted() {
     this.init();
     this.load();
@@ -121,7 +118,7 @@ export default {
       this.mainCanvas.width = this.viewport.w;
       this.mainCanvas.height = this.viewport.h;
       this.verticalIncrement = this.viewport.h / 100 * this.pixelRatio;
-      this.finalPosition = 'header';
+      this.finalPosition = this.$route.name === 'index' ? 'center' : 'header';
       this.projectsSvg = document.querySelectorAll('.loading-home-svgs__project-title');
       // this.svgs = document.querySelectorAll('svg .loading-svgs');
       this.shape = document.querySelector("#loading-shape")
@@ -424,7 +421,6 @@ export default {
 
     manageNextAnimationLoop() {
       if (this.hasLoaded) {
-        // @TODO Define center or header depending on route to display
         this.startMorphingTitle(this.finalPosition);
       } else {
         this.startDuplications();
@@ -536,7 +532,7 @@ export default {
         this.updateMorphingValues();
         this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
         // this.mainCanvas.ctx.translate(0, this.pageTransition.totalDuplications * (this.incrementDirection * this.verticalIncrement));
-        // mainCanvas.ctx.setT
+        // mainCanvas.ctx.setTransform(1,0,0,1,0, -canvasRatio * verticalIncrement);
       }, 100);
     },
 

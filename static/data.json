@@ -18,7 +18,7 @@
           "sources": [
             {
               "type": "video/mp4",
-              "src": "badass/yaeji.mp4"
+              "src": "badass/video_1.mp4"
             }
           ]
         },
@@ -39,7 +39,7 @@
           "sources": [
             {
               "type": "video/mp4",
-              "src": "badass/yaeji.mp4"
+              "src": "badass/video_2.mp4"
             }
           ]
         },
@@ -105,6 +105,15 @@
       },
       "elements": [
         {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/webm",
+              "src": "vitality/vitality.webm"
+            }
+          ]
+        },
+        {
           "type": "mockup",
           "src": "vitality/mock_up_01.png"
         },
@@ -139,21 +148,21 @@
       },
       "elements": [
         {
-          "type": "video",
-          "sources": [
-            {
-              "type": "video/mp4",
-              "src": "badass/yaeji.mp4"
-            }
-          ]
+          "type": "mockup",
+          "src": "tesla/mock_up_01.png"
         },
         {
           "type": "text",
           "text": "After several meetings, we agreed on a direction to take together and then worked separately. I chose to work on the cluster interface because it appeared to me as the most innovative one. Also something complex I had never been confronted with."
         },
         {
-          "type": "mockup",
-          "src": "tesla/mock_up_01.png"
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "tesla/video_onboard.mp4"
+            }
+          ]
         },
         {
           "type": "mockup",
@@ -168,7 +177,7 @@
           "sources": [
             {
               "type": "video/mp4",
-              "src": "badass/yaeji.mp4"
+              "src": "tesla/video_onboard.mp4"
             }
           ]
         },
@@ -187,6 +196,33 @@
         {
           "type": "mockup",
           "src": "tesla/mock_up_05.png"
+        },
+        {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "tesla/video_touchscreen.mp4"
+            }
+          ]
+        },
+        {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "tesla/video_mobile.mp4"
+            }
+          ]
+        },
+        {
+          "type": "video",
+          "sources": [
+            {
+              "type": "video/mp4",
+              "src": "tesla/video_watch.mp4"
+            }
+          ]
         }
       ]
     }
