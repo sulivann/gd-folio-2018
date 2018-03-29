@@ -12,6 +12,12 @@
       <div class="all-works__case-number">03</div>
       <div class="all-works__case-number">04</div>
     </div>
+    <div class="all-works__triggers">
+      <div class="all-works__trigger" @mouseover="handleMouseOver"></div>
+      <div class="all-works__trigger" @mouseover="handleMouseOver"></div>
+      <div class="all-works__trigger" @mouseover="handleMouseOver"></div>
+      <div class="all-works__trigger" @mouseover="handleMouseOver"></div>
+    </div>
     <div class="all-works__background">
       <div class="all-works__backgroundImg"></div>
     </div>
@@ -76,6 +82,22 @@
     height: 100vh;
     transform: translateX(-100%);
   }
+
+  .all-works__triggers {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .all-works__trigger {
+    width: 25%;
+    height: 100vh;
+    display: inline-block;
+    cursor: pointer;
+  }
 </style>
 
 <script>
@@ -127,20 +149,33 @@ export default {
         w: process.browser ? window.innerWidth : undefined,
         h: process.browser ? window.innerHeight : undefined,
       },
-      position: 'central'
+      position: 'central',
+      alreadyAnimated: false
     }
   },
   mounted() {
     this.background = document.querySelector('.all-works__backgroundImg');
-    setTimeout(() => {
-      TweenMax.to(this.background, 0.4, {
+  },
+  methods: {
+    handleMouseOver() {
+      if (!this.alreadyAnimated) {
+        this.alreadyAnimated = true;
+        this.triggerAnimation();
+        setTimeout(() => {
+          TweenMax.set(this.background, { clearProps:"all" });
+          this.alreadyAnimated = false;
+        }, 2000);
+      }
+    },
+    triggerAnimation() {
+      this.tween = TweenMax.to(this.background, 0.4, {
         backgroundPosition: "100% center",
         x: "500%",
-        force3D:true,
+        force3D: true,
         ease: CustomEase.create('custom", "0.86, 0, 0.07, 1')
       });
-    this.$store.dispatch('setActiveIndex', 2);
-    }, 2000);
+      this.$store.dispatch('setActiveIndex', 2);
+    }
   },
   components: {
     TitleCanvas,
