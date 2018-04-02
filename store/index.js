@@ -6,6 +6,7 @@ const createStore = () => {
       activeIndex: 0,
       homeBeenHovered: false,
       loaderHidden: false,
+      mobileLayout: false,
     },
     getters: {
         activeIndex (state) {
@@ -16,6 +17,9 @@ const createStore = () => {
         },
         loadingHidden (state) {
           return state.loadingHidden
+        },
+        mobileLayout (state) {
+          return state.mobileLayout
         }
     },
     mutations: {
@@ -27,6 +31,9 @@ const createStore = () => {
         },
         SET_LOADERHIDDEN (state, loaderHidden) {
           state.loaderHidden = loaderHidden
+        },
+        SET_MOBILELAYOUT (state, mobileLayout) {
+          state.mobileLayout = mobileLayout
         }
       },
       actions: {
@@ -38,7 +45,10 @@ const createStore = () => {
         },
         setLoaderHidden ({ commit }, loaderHidden) {
           commit('SET_LOADERHIDDEN', loaderHidden)
-        }
+        },
+        setMobileLayout ({ commit }, mobileLayout) {
+          commit('SET_MOBILELAYOUT', mobileLayout)
+        },
       }
     })
   };

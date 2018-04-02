@@ -1,10 +1,10 @@
 <template>
   <div class="home-images">
     <div class="home-project__images-container">
-      <img class="home-project__image" :src="projectImgSource" alt="">
-      <img class="home-project__image" :src="projectImgSource" alt="">
-      <img class="home-project__image" :src="projectImgSource" alt="">
-      <img class="home-project__image" :src="projectImgSource" alt="">
+      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
+      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
+      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
+      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ import { TweenMax, Power2 } from 'gsap';
 
   export default {
     props: [
-      'projects',
+      'img',
       'mouse',
       'viewport'
     ],
@@ -40,14 +40,19 @@ import { TweenMax, Power2 } from 'gsap';
     methods: {
       init() {
         this.projectImages = document.querySelectorAll('.home-project__image');
-        this.projectImgSource = this.projects[this.$store.state.activeIndex].homeIMGSRC;
-        if (this.$store.getters.homeBeenHovered) this.imgFadeIn();
+        this.projectImgSource = this.img;
+        if (this.$store.getters.homeBeenHovered || this.$store.getters.mobileLayout) this.imgFadeIn();
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
             this.imgUpdate();
           }
           if (mutation.type === 'SET_HOMEHOVER') {
             this.imgFadeIn();
+          }
+          if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === true) {
+            this.imgFadeIn();
+          } else if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === false && !state.homeBeenHovered) {
+            this.imgFadeOut();
           }
         })
       },
@@ -77,7 +82,7 @@ import { TweenMax, Power2 } from 'gsap';
       },
 
       updateImgsURL() {
-        this.projectImgSource = this.projects[this.$store.state.activeIndex].homeIMGSRC;
+        this.projectImgSource = this.img;
       },
 
       moveImages(mouse) {

@@ -7,7 +7,10 @@
   width: 100vw;
   height: 100vh;
   background:transparent;
-  pointer-events: none;
+}
+
+.home-project__title--bottom{
+  height: 100vh;
 }
 
 .home-svgs__container{
@@ -16,4 +19,13 @@
   display: flex;
   top: -10000px;
   left: -10000px;
+}
+
+.title__next-project{
+  position: absolute;
+  top: 80%;
+  left: 10%;
+  &.title__next-project--hidden{
+    display: none;
+  }
 }

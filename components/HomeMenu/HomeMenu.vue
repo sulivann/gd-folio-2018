@@ -120,8 +120,8 @@
       },
       removeEventListeners () {
         this.projectsIndex.forEach((index) => {
-          index.removeEventListeners('mouseenter', () => { this.updateMenuLine(index, 0.7) });
-          index.removeEventListeners('mouseleave', () => { this.updateMenuLine(index, 1) })
+          index.removeEventListener('mouseenter', this.updateMenuLine(index, 0.7));
+          index.removeEventListener('mouseleave', this.updateMenuLine(index, 1));
         });
       }
     },

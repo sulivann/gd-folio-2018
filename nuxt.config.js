@@ -36,7 +36,8 @@ module.exports = {
   plugins: [
     { src: '~/plugins/smooth-scroll.js', ssr: false },
     { src: '~/plugins/scroll.js', ssr: false },
-    { src: '~/plugins/resource-loader.js', ssr: false }
+    { src: '~/plugins/resource-loader.js', ssr: false },
+    { src: '~/plugins/pixijs.js', ssr: false }
   ],
 
   /*
