@@ -609,7 +609,7 @@
         setTimeout(() => {
           this.updateActiveProject();
           this.routeToProject();
-        }, 2000);
+        }, 1000);
       },
 
       routeToProject() {
