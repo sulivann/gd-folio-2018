@@ -24,17 +24,18 @@
 </style>
 
 <script>
-import Scrollbar from 'smooth-scrollbar';
-import { TweenMax, Power2 } from 'gsap';
-import 'gsap/MorphSVGPlugin';
-import 'gsap/CustomEase';
+
+  import Scrollbar from 'smooth-scrollbar';
+  import { TweenMax, Power2 } from 'gsap';
+  import 'gsap/MorphSVGPlugin';
+  import 'gsap/CustomEase';
 
   export default {
     props: [
       'titles',
       'projectIndex',
       'viewport',
-      'position',
+      'canvasPos',
     ],
     data() {
       return {
@@ -44,6 +45,7 @@ import 'gsap/CustomEase';
           width: '',
           height: '',
         },
+        position: this.canvasPos,
         canvasRatio: 0,
         projectsSvg: '',
         svgs: '',
@@ -56,7 +58,7 @@ import 'gsap/CustomEase';
         svgHeight: '',
         states: [],
         sizes: [],
-        titleIndex: this.position === 'footer' ? this.projectIndex : this.$store.getters.activeIndex,
+        titleIndex: this.canvasPos === 'footer' ? this.projectIndex : this.$store.getters.activeIndex,
         maxRatio: 0,
         tick: 0,
         resizeTimer: undefined,
@@ -83,8 +85,6 @@ import 'gsap/CustomEase';
           maxX: undefined,
           minY: undefined,
           maxY: undefined,
-          isHovered: false,
-          hasBeenHovered: false,
           alpha: 0.7,
         },
         pageTransition: {
@@ -125,24 +125,30 @@ import 'gsap/CustomEase';
       this.cancelEventListeners();
       cancelAnimationFrame(this.req);
     },
+    watch: {
+      canvasPos: function(val) {
+        this.position = val;
+      }
+    },
     methods: {
       init() {
         // initialize canvas
-        this.pixelRatio = window.devicePixelRatio;
+        this.pixelRatio = this.$store.getters.pixelRatio;
         this.mainCanvas.el = document.createElement('canvas');
         this.mainCanvas.ctx = this.mainCanvas.el.getContext('2d');
         this.mainCanvas.width = this.viewport.w;
         this.mainCanvas.height = this.viewport.h;
-        this.verticalIncrement = this.viewport.h / 220 * this.pixelRatio;
+        this.verticalIncrement = this.viewport.h / (220 / this.pixelRatio);
         this.incrementDirection = this.position === 'header' ? -1 : 1;
         this.projectsSvg = this.$el.querySelectorAll('.home-svgs__project-title');
         this.svgs = this.$el.querySelectorAll('svg');
-        this.shape = this.$el.querySelector("#shape")
         this.endShape = this.$el.querySelectorAll(".project");
         this.responsiveRatio = this.defineResponsiveRatio();
         this.toBezier = MorphSVGPlugin.pathDataToRawBezier;
-        this.morphingSVG.el = this.$el.querySelector('.morph-shape');
+        this.shape = this.$el.querySelector("#shape")
         this.shape.setAttribute('d', this.titles[this.titleIndex].svgTitlePath);
+
+        this.morphingSVG.el = this.$el.querySelector('.morph-shape');
         this.morphingSVG.el.setAttribute('viewBox', this.titles[this.titleIndex].svgTitleVB);
         this.updateMorphingValues();
         // Subscribe to state project update
@@ -175,12 +181,7 @@ import 'gsap/CustomEase';
           this.texture.update();
         });
         this.setDisplay();
-        if (this.position === 'header') {
-          const svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
-          this.pageTransition.totalDuplications = Math.ceil((this.mainCanvas.el.height / this.pixelRatio / 2  - svgVertical) / this.verticalIncrement) + 5;
-          this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
-          // this.mainCanvas.ctx.translate(0, -this.verticalIncrement * this.pageTransition.totalDuplications);
-        }
+        this.setTransitionDuplications();
         if (this.position === 'footer') {
           // this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
           this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
@@ -193,9 +194,9 @@ import 'gsap/CustomEase';
       setEventListeners() {
         window.addEventListener('resize', this.resize);
         if(this.position === 'footer') {
-          this.$el.querySelector('.home-project__title').addEventListener('click', this.clickEvent);
+          document.addEventListener('click', this.clickEvent);
           // this.$el.querySelector('.home-project__title').addEventListener('mousemove', document.body.style.cursor.);          
-        } else if (this.position !== 'header') {
+        } else if (this.position !== 'header' && this.$route.path.search('/work/') === -1) {
           document.addEventListener('click', this.clickEvent);
         }
       },
@@ -355,6 +356,7 @@ import 'gsap/CustomEase';
             this.canvasRatio = 0;
             this.sizes.length = 0;
             this.titleAnimation.isComplete = undefined;
+            this.setTransitionDuplications();
             return;
           }
         }
@@ -429,10 +431,11 @@ import 'gsap/CustomEase';
           const fillStroke = this.tick > 0 ? j * 0.7 / this.tick : j / 1;
           this.strokeFillClosePath(fillStroke);
           // if it is the last duplicata, set the vertical offset and set isComplete to get back to the first state
-          if ( duplicates === 1){
+          if (duplicates === 1){
             // this.canvasRatio = this.pageTransition.totalDuplications;
             //mainCanvas.ctx.translate(0, -pageTransition.totalDuplications*verticalIncrement);
-            // this.pageTransition.isComplete = undefined;
+            this.pageTransition.isComplete = undefined;
+            this.position = 'header';
             return;
           }
         }
@@ -453,13 +456,13 @@ import 'gsap/CustomEase';
         this.pageTransition.initialIncrement = totalTicks;
         this.pageTransition.isComplete = true;
         TweenMax
-        .to(this.pageTransition, 0.6, {
+        .to(this.pageTransition, 0.3, {
           duplications: 1,
           ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
         });
       },
 
-      morphTitle() {      
+      morphTitle() {
         this.titleAnimation.totalDuplications = 70 / this.pixelRatio;
         this.tl.to(this.shape, 0.7,
           {
@@ -528,10 +531,10 @@ import 'gsap/CustomEase';
         if (this.mouseOverProjectTitle()) {
           if (this.title.alpha === 0.7) this.setTitleAlpha(1);
           document.body.style.cursor = 'pointer';
-          if (!this.$store.getters.homeBeenHovered) this.$store.dispatch('setHomeHover', true);
+          if (!this.$store.getters.homeBeenHovered && this.$route.path.search('/work/') == -1) this.$store.dispatch('setHomeHover', true);
         } else {
           if (this.title.alpha === 1) this.setTitleAlpha(0.7);
-        document.body.style.cursor = 'default';
+          document.body.style.cursor = 'default';
         }
       },
 
@@ -543,6 +546,7 @@ import 'gsap/CustomEase';
 
       mouseOverProjectTitle() {
         const scrollbars = Scrollbar.getAll();
+        
         return this.mouse.posX >= this.title.minX + this.morphingSVG.x &&
                this.mouse.posX <= this.title.maxX + this.morphingSVG.x &&
                this.mouse.posY >= this.title.minY + this.morphingSVG.visibleY &&
@@ -556,21 +560,10 @@ import 'gsap/CustomEase';
       transitionToProject() {
         this.pageTransition.hasStarted = true;
         document.body.style.cursor = 'default';
+        this.title.alpha = 1;
         if (this.pageTransition.isComplete === undefined) {
           // 
-          const displacementRatio = this.position === 'footer' ? 1 : 2;
-          
-          // * Start with defining the point to reach at the end of animation
-          // **For the project to project transition, its the top of the canvas minus one third of the active title
-          // 0 - (morphingSVG.visibleHeight / 3) - (morphingSVG.visibleY / 3)
-          // * Get the distance between the final point and the starting point
-          // ** For the project to project transition, it is the bottom of the canvas plus one third of the active title
-          // this.mainCanvas.el.height + (this.morphingSvg.visibleHeight / 3) + (this.morphinSvg.visibleY / 3)
-          // * Divide the distance by the value of the increment to get the number of duplications
-          // (this.mainCanvas.el.height / this.pixelRatio - morphSvgVisibleVertical) / this.verticalIncrement
-
-          const svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
-          this.pageTransition.totalDuplications = Math.ceil((this.mainCanvas.el.height / this.pixelRatio - svgVertical) / this.verticalIncrement);
+          // const displacementRatio = this.position === 'footer' ? 1 : 2;
           this.maxLength = 0;
           this.tick = 0;
           this.states.length = 0;
@@ -588,12 +581,12 @@ import 'gsap/CustomEase';
           setTimeout(() => {
             this.pageTransition.isComplete = false;
             TweenMax
-            .to(this.pageTransition, 0.7, {
+            .to(this.pageTransition, 0.3, {
               duplications: this.pageTransition.totalDuplications,
               ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
               delay: 0.05,
             });
-          }, 500);
+          }, 50);
         }
         setTimeout(() => {
           this.updateActiveProject();
@@ -603,7 +596,7 @@ import 'gsap/CustomEase';
 
       routeToProject() {
         this.$router.push(`/work/${this.titles[this.titleIndex].name}`);
-        if (this.position === 'footer') {
+        if (this.canvasPos === 'footer') {
           const value = this.setIndex(this.projectIndex);
           this.$store.dispatch('setActiveIndex', value);
         }
@@ -620,6 +613,24 @@ import 'gsap/CustomEase';
         this.mainCanvas.ctx.scale(this.pixelRatio, this.pixelRatio);
       },
 
+      setTransitionDuplications() {
+        // * Start with defining the point to reach at the end of animation
+        // **For the project to project transition, its the top of the canvas minus one third of the active title
+        // 0 - (morphingSVG.visibleHeight / 3) - (morphingSVG.visibleY / 3)
+        // * Get the distance between the final point and the starting point
+        // ** For the project to project transition, it is the bottom of the canvas plus one third of the active title
+        // this.mainCanvas.el.height + (this.morphingSvg.visibleHeight / 3) + (this.morphinSvg.visibleY / 3)
+        // * Divide the distance by the value of the increment to get the number of duplications
+        // (this.mainCanvas.el.height / this.pixelRatio - morphSvgVisibleVertical) / this.verticalIncrement
+        let svgVertical;
+        if (this.position === 'center' || this.position === 'header'){
+          svgVertical = ((this.morphingSVG.visibleHeight) / 2);
+          this.pageTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio - svgVertical +  this.morphingSVG.visibleY) / 2) / this.verticalIncrement);
+        } else {
+          svgVertical = ((this.morphingSVG.visibleHeight) / 3 * 2);
+          this.pageTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio - svgVertical +  this.morphingSVG.visibleY)) / this.verticalIncrement);
+        }
+      },
       /*
       * The main animation
       */

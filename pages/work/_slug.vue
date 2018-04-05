@@ -1,8 +1,8 @@
 <template>
-  <div class="work" v-smooth-scroll>
-    <title-canvas :titles="titles" 
+  <div class="work">
+    <!-- <title-canvas :titles="titles" 
       :viewport="viewport" 
-      position="header"/>
+      position="header"/> -->
     <case-heading
       :role="data.role"
       :contextLabel="data.contextLabel"
@@ -26,7 +26,7 @@
     </div>
     <div class="work__footer">
       <title-canvas 
-        position="footer" 
+        canvasPos="footer" 
         :titles="titles" 
         :viewport="viewport"
         :projectIndex="this.setIndex(this.$store.getters.activeIndex + 1)"/>
@@ -36,13 +36,13 @@
 
 <style lang="scss">
   .work {
-    height: 100vh;
-    width: 100%;
-    background-color: #0D0D0D;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    // height: 100vh;
+    // width: 100%;
+    // background-color: #0D0D0D;
+    // overflow: hidden;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
     .work__footer {
       position: absolute;
       width: 100%;
@@ -84,7 +84,7 @@ export default {
         w: process.browser ? window.innerWidth : undefined,
         h: process.browser ? window.innerHeight : undefined,
       },
-      position: 'header',
+      canvasPos: 'header',
       data: data.data[this.$route.params.slug],
       titles: Object.keys(data.data).reduce((previous, key) => {
         previous.push({

@@ -7,6 +7,7 @@ const createStore = () => {
       homeBeenHovered: false,
       loaderHidden: false,
       mobileLayout: false,
+      pixelRatio: null,
     },
     getters: {
         activeIndex (state) {
@@ -20,6 +21,9 @@ const createStore = () => {
         },
         mobileLayout (state) {
           return state.mobileLayout
+        },
+        pixelRatio (state) {
+          return state.pixelRatio
         }
     },
     mutations: {
@@ -34,22 +38,28 @@ const createStore = () => {
         },
         SET_MOBILELAYOUT (state, mobileLayout) {
           state.mobileLayout = mobileLayout
+        },
+        SET_PIXELRATIO (state, pixelRatio) {
+          state.pixelRatio = pixelRatio
         }
       },
-      actions: {
-        setActiveIndex ({ commit }, activeIndex) {
-          commit('SET_ACTIVEINDEX', activeIndex)
-        },
-        setHomeHover ({ commit }, homeBeenHovered) {
-          commit('SET_HOMEHOVER', homeBeenHovered)
-        },
-        setLoaderHidden ({ commit }, loaderHidden) {
-          commit('SET_LOADERHIDDEN', loaderHidden)
-        },
-        setMobileLayout ({ commit }, mobileLayout) {
-          commit('SET_MOBILELAYOUT', mobileLayout)
-        },
-      }
+    actions: {
+      setActiveIndex ({ commit }, activeIndex) {
+        commit('SET_ACTIVEINDEX', activeIndex)
+      },
+      setHomeHover ({ commit }, homeBeenHovered) {
+        commit('SET_HOMEHOVER', homeBeenHovered)
+      },
+      setLoaderHidden ({ commit }, loaderHidden) {
+        commit('SET_LOADERHIDDEN', loaderHidden)
+      },
+      setMobileLayout ({ commit }, mobileLayout) {
+        commit('SET_MOBILELAYOUT', mobileLayout)
+      },
+      setpixelRatio ({ commit }, pixelRatio) {
+        commit('SET_PIXELRATIO', pixelRatio)
+      },
+    }
     })
   };
 

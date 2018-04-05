@@ -1,7 +1,7 @@
 <template>
     <main class="home">
       <!-- <home-case /> -->
-      <title-canvas :titles="data.titles" :viewport="viewport" :position="position"/>
+      <!-- <title-canvas :titles="data.titles" :viewport="viewport" :position="position"/> -->
       <home-images :img="data.home_img" :viewport="viewport" />
       <home-menu :projects="data.titles" />
       <home-subtitle :role="data.role" />
@@ -65,7 +65,7 @@ export default {
         w: process.browser ? window.innerWidth : undefined,
         h: process.browser ? window.innerHeight : undefined,
       },
-      position: 'central'
+      position: 'center'
     }
   },
 

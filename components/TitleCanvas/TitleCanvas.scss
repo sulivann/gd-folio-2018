@@ -1,5 +1,11 @@
+.title-canvas{
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+}
+
 .home-project__title,
-.title-canvas svg {
+.title-canvas svg{
   z-index: 10;
   position: absolute;
   top: 0;
@@ -7,6 +13,7 @@
   width: 100vw;
   height: 100vh;
   background:transparent;
+  pointer-events: none;
 }
 
 .home-project__title--bottom{

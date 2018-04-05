@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div class="main">
+    <div class="main" v-smooth-scroll>
       <!-- <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/> -->
+      <title-canvas :titles="data.titles" :viewport="viewport" :canvasPos="canvasPos"/>
       <nuxt />
     </div>
   </div>
@@ -10,8 +11,9 @@
 <script>
 // Data
 import data from '~/static/data.json';
-
+import Scrollbar from 'smooth-scrollbar';
 import Loader from '~/components/Loader/Loader.vue';
+import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
 
 export default {
 
@@ -34,6 +36,12 @@ export default {
         w: process.browser ? window.innerWidth : undefined,
         h: process.browser ? window.innerHeight : undefined,
       },
+      scrolling: false,
+      mouse: {
+        posX: '',
+        posY: '',
+      },
+      canvasPos: 'center',
       showLoader: true,
       showContent: false,
     }
@@ -41,16 +49,34 @@ export default {
 
   components: {
     Loader,
+    TitleCanvas
   },
 
   mounted() {
     this.init();
   },
 
+  beforeMount() {
+    this.setPixelRatio();
+  },
+
   methods: {
     init() {
+      window.onNuxtReady((app) => {
+        app.$nuxt.$on('routeChanged', (to, from) => {
+          // const scrollbars = Scrollbar.getAll();
+          // if (scrollbars.length > 0) scrollbars[0].scrollTop = 0;
+          if (from.name === 'index') {
+
+          } else if (from.name === 'work-slug' && to.name === 'work-slug'){
+            console.log('dabedidabedou');
+            this.canvasPos = 'header';
+          }
+          // console.log(from, to);
+        })
+      })
       this.resizeEvent = window.addEventListener('resize', this.checkMobileLayout);
-      this.checkMobileLayout();
+      this.setMobileLayout();
       let subscribe = this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'SET_LOADERHIDDEN' && this.$store.state.loaderHidden === true) {
           this.showContent = true;
@@ -59,6 +85,40 @@ export default {
           }, 200);
         }
       });
+      document.addEventListener('mousemove', (e) => this.updateMousePosition(e));
+      document.addEventListener('wheel', this.wheelEvent);
+      document.addEventListener('scroll', this.wheelEvent);
+      let suscribe = this.$store.subscribe((mutation, state) => {
+        if (mutation.type === 'SET_ACTIVEINDEX' && this.$store.state.homeBeenHovered === true) {
+          this.updateData();
+        }
+      });
+    },
+    wheelEvent(e) {
+      const scrollbars = Scrollbar.getAll();
+      if (scrollbars[0].offset.y > document.querySelector('.title-canvas').getBoundingClientRect().height) {
+      }
+    },
+    updateMousePosition(e) {
+      this.mouse.posX = e.clientX;
+      this.mouse.posY = e.clientY;
+      if (this.$route.path.search('/work/') === -1) {
+        this.$emit('mousemove', this.mouse)
+      }
+    },
+    updateData() {
+      this.data = {
+        home_img: data.data[Object.keys(data.data)[this.$store.getters.activeIndex]].home_img,
+        role: data.data[Object.keys(data.data)[this.$store.getters.activeIndex]].role,
+        titles: Object.keys(data.data).reduce((previous, key) => {
+          previous.push({
+            name: data.data[key].slug,
+            svgTitleVB: data.data[key].svgTitleVB,
+            svgTitlePath: data.data[key].svgTitlePath,
+          });
+          return previous;
+        }, []),
+      }
     },
     setIndex(index) {
       if (index > data.data.length - 1) {
@@ -69,13 +129,21 @@ export default {
       }
       return index;
     },
-    checkMobileLayout() {
+    setMobileLayout() {
       if (window.innerWidth <= 900) {
         this.$store.dispatch('setMobileLayout', true);
       } else {
         this.$store.dispatch('setMobileLayout', false);
       }
-    }
+    },
+    setPixelRatio() {  
+      const ua = new UAParser().getResult();
+      if (ua.browser.name === 'Chrome' && parseInt(ua.browser.major) >= 65 && ua.os.name === 'Mac OS' && parseInt(ua.os.version.substring(3, 5)) <= 11) {
+        this.$store.dispatch('setpixelRatio', 1);
+      } else {
+        this.$store.dispatch('setpixelRatio', window.devicePixelRatio);
+      }
+    },
   }
 }
 </script>
@@ -84,7 +152,7 @@ export default {
   .main {
     height: 100vh;
     width: 100%;
-    background-color: #0D0D0D;
+    // background-color: #0D0D0D;
 
     &::before {
       content: '';
@@ -108,9 +176,9 @@ export default {
       width: 100vh;
       height: 100vh;
       border-radius: 50%;
-      background: -moz-radial-gradient(center, ellipse cover,  rgba(255, 255, 255, 0.05) 0%, transparent); /* FF3.6-15 */
-      background: -webkit-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0.05) 0%, transparent); /* Chrome10-25,Safari5.1-6 */
-      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      // background: -moz-radial-gradient(center, ellipse cover,  rgba(255, 255, 255, 0.05) 0%, transparent); /* FF3.6-15 */
+      // background: -webkit-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0.05) 0%, transparent); /* Chrome10-25,Safari5.1-6 */
+      // background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       mix-blend-mode: soft-light;
       //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1affffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
     }
