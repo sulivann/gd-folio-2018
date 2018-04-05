@@ -1,7 +1,7 @@
 <template>
   <div class="work">
-    <!-- <title-canvas :titles="titles" 
-      :viewport="viewport" 
+    <!-- <title-canvas :titles="titles"
+      :viewport="viewport"
       position="header"/> -->
     <case-heading
       :role="data.role"
@@ -24,13 +24,6 @@
         v-if="element.type === 'mockup'"
         :src="element.src"/>
     </div>
-    <div class="work__footer">
-      <title-canvas 
-        canvasPos="footer" 
-        :titles="titles" 
-        :viewport="viewport"
-        :projectIndex="this.setIndex(this.$store.getters.activeIndex + 1)"/>
-    </div>
   </div>
 </template>
 
@@ -43,11 +36,17 @@
     // display: flex;
     // justify-content: center;
     // align-items: center;
-    .work__footer {
+    padding-bottom: $space-xtra-large;
+
+    &__footer {
       position: absolute;
       width: 100%;
       height: 100vh;
       bottom: -40vh;
+    }
+
+    &__element:last-child div {
+      margin-bottom: 0;
     }
   }
 </style>

@@ -2,7 +2,11 @@
   <div>
     <div class="main" v-smooth-scroll>
       <!-- <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/> -->
-      <title-canvas :titles="data.titles" :viewport="viewport" :canvasPos="canvasPos"/>
+      <title-canvas
+        :titles="data.titles"
+        :viewport="viewport"
+        :canvasPos="canvasPos"
+        :projectIndex="getIndex" />
       <nuxt />
     </div>
   </div>
@@ -16,7 +20,11 @@ import Loader from '~/components/Loader/Loader.vue';
 import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
 
 export default {
-
+  computed: {
+    getIndex() {
+      return this.canvasPos === 'footer' ? this.setIndex(this.$store.getters.activeIndex + 1) : this.setIndex(this.$store.getters.activeIndex);
+    }
+  },
   data() {
     return {
       activeIndex: this.$route.path.search('/work/') !== -1  ? this.$store.dispatch('setActiveIndex', this.setIndex(Object.keys(data.data).indexOf(this.$route.params.slug))) : 0,
@@ -69,7 +77,6 @@ export default {
           if (from.name === 'index') {
 
           } else if (from.name === 'work-slug' && to.name === 'work-slug'){
-            console.log('dabedidabedou');
             this.canvasPos = 'header';
           }
           // console.log(from, to);
@@ -96,15 +103,24 @@ export default {
     },
     wheelEvent(e) {
       const scrollbars = Scrollbar.getAll();
+      const titleCanvas = document.querySelector('.title-canvas');
       if (scrollbars[0].offset.y > document.querySelector('.title-canvas').getBoundingClientRect().height) {
+      }
+
+      if (scrollbars[0].scrollTop > window.innerHeight) {
+        titleCanvas.style.top = 'auto';
+        titleCanvas.style.bottom = 0;
+        this.canvasPos = 'footer';
+      } else {
+        titleCanvas.style.top = 0;
+        titleCanvas.style.bottom = 'auto';
+        this.canvasPos = 'header';
       }
     },
     updateMousePosition(e) {
       this.mouse.posX = e.clientX;
       this.mouse.posY = e.clientY;
-      if (this.$route.path.search('/work/') === -1) {
-        this.$emit('mousemove', this.mouse)
-      }
+      this.$emit('mousemove', this.mouse);
     },
     updateData() {
       this.data = {
@@ -122,7 +138,7 @@ export default {
     },
     setIndex(index) {
       if (index > data.data.length - 1) {
-          index = 0
+          index = 0;
       }
       if (index < 0) {
           index = data.data.length - 1;
@@ -136,12 +152,12 @@ export default {
         this.$store.dispatch('setMobileLayout', false);
       }
     },
-    setPixelRatio() {  
+    setPixelRatio() {
       const ua = new UAParser().getResult();
       if (ua.browser.name === 'Chrome' && parseInt(ua.browser.major) >= 65 && ua.os.name === 'Mac OS' && parseInt(ua.os.version.substring(3, 5)) <= 11) {
         this.$store.dispatch('setpixelRatio', 1);
       } else {
-        this.$store.dispatch('setpixelRatio', window.devicePixelRatio);
+        this.$store.dispatch('setpixelRatio', 1);
       }
     },
   }

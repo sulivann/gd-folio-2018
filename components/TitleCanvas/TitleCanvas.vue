@@ -128,6 +128,17 @@
     watch: {
       canvasPos: function(val) {
         this.position = val;
+        this.cancelEventListeners();
+        this.setEventListeners();
+        this.setTransitionDuplications();
+
+        if (this.position !== 'header') {
+          this.$parent.$on('mousemove', this.checkTitleHover)
+        }
+      },
+      projectIndex: function(val) {
+        this.titleIndex = val;
+        this.setShape();
       }
     },
     methods: {
@@ -145,11 +156,7 @@
         this.endShape = this.$el.querySelectorAll(".project");
         this.responsiveRatio = this.defineResponsiveRatio();
         this.toBezier = MorphSVGPlugin.pathDataToRawBezier;
-        this.shape = this.$el.querySelector("#shape")
-        this.shape.setAttribute('d', this.titles[this.titleIndex].svgTitlePath);
-
-        this.morphingSVG.el = this.$el.querySelector('.morph-shape');
-        this.morphingSVG.el.setAttribute('viewBox', this.titles[this.titleIndex].svgTitleVB);
+        this.setShape();
         this.updateMorphingValues();
         // Subscribe to state project update
         let suscribe = this.$store.subscribe((mutation, state) => {
@@ -160,7 +167,10 @@
             this.sizes.length = 0;
             this.titleAnimation.isComplete = false;
             this.titleIndex =  this.$store.getters.activeIndex;
-            this.morphTitle();
+
+            if (this.$route.name === 'index') {
+              this.morphTitle();
+            }
           }
         })
         this.setEventListeners();
@@ -191,11 +201,19 @@
         }
       },
 
+      setShape() {
+        this.shape = this.$el.querySelector("#shape")
+        this.shape.setAttribute('d', this.titles[this.titleIndex].svgTitlePath);
+
+        this.morphingSVG.el = this.$el.querySelector('.morph-shape');
+        this.morphingSVG.el.setAttribute('viewBox', this.titles[this.titleIndex].svgTitleVB);
+      },
+
       setEventListeners() {
         window.addEventListener('resize', this.resize);
         if(this.position === 'footer') {
           document.addEventListener('click', this.clickEvent);
-          // this.$el.querySelector('.home-project__title').addEventListener('mousemove', document.body.style.cursor.);          
+          // this.$el.querySelector('.home-project__title').addEventListener('mousemove', document.body.style.cursor.);
         } else if (this.position !== 'header' && this.$route.path.search('/work/') === -1) {
           document.addEventListener('click', this.clickEvent);
         }
@@ -332,7 +350,7 @@
       * Remove the duplications until there's only one left
       */
       projectTransitionEnd(data) {
-        const duplicates = Math.trunc(Math.ceil(this.titleAnimation.duplications));        
+        const duplicates = Math.trunc(Math.ceil(this.titleAnimation.duplications));
         if (this.maxLength === 0) {
           this.maxLength = this.titleAnimation.totalDuplications - 1;
           this.canvasRatio = duplicates - 1;
@@ -370,7 +388,7 @@
       *
       */
       pageTransitionStart(data) {
-        const duplicates = Math.trunc(Math.ceil(this.pageTransition.duplications));        
+        const duplicates = Math.trunc(Math.ceil(this.pageTransition.duplications));
         if (duplicates === 0) {
           for (let i = 0; i < this.pageTransition.totalDuplications; i++){
             this.states[i] = this.toBezier(data);
@@ -416,7 +434,7 @@
           this.tick = Math.trunc(this.tick / 2) + (Math.trunc(this.tick / 2) % 2);
           this.displayedDuplicatas = this.sizes.length;
         }
-        for (let j = 0; j < duplicates; j++ ) {          
+        for (let j = 0; j < duplicates; j++ ) {
           const ratioX = this.sizes[j + this.sizes.length - duplicates];
           let ratioY;
           if (this.position === 'footer') {
@@ -527,7 +545,7 @@
       checkTitleHover(mouse) {
         this.mouse.posX = mouse.posX;
         this.mouse.posY = mouse.posY;
-        
+
         if (this.mouseOverProjectTitle()) {
           if (this.title.alpha === 0.7) this.setTitleAlpha(1);
           document.body.style.cursor = 'pointer';
@@ -546,7 +564,7 @@
 
       mouseOverProjectTitle() {
         const scrollbars = Scrollbar.getAll();
-        
+
         return this.mouse.posX >= this.title.minX + this.morphingSVG.x &&
                this.mouse.posX <= this.title.maxX + this.morphingSVG.x &&
                this.mouse.posY >= this.title.minY + this.morphingSVG.visibleY &&
@@ -562,7 +580,7 @@
         document.body.style.cursor = 'default';
         this.title.alpha = 1;
         if (this.pageTransition.isComplete === undefined) {
-          // 
+          //
           // const displacementRatio = this.position === 'footer' ? 1 : 2;
           this.maxLength = 0;
           this.tick = 0;
@@ -596,12 +614,13 @@
 
       routeToProject() {
         this.$router.push(`/work/${this.titles[this.titleIndex].name}`);
+
         if (this.canvasPos === 'footer') {
           const value = this.setIndex(this.projectIndex);
           this.$store.dispatch('setActiveIndex', value);
         }
       },
-      
+
       defineResponsiveRatio() {
         const largestSvg = Object.keys(this.projectsSvg).reduce((a, b) => this.projectsSvg[a].viewBox.baseVal.width > this.projectsSvg[b].viewBox.baseVal.width ? a : b);
         return this.viewport.w * 0.8 < this.projectsSvg[largestSvg].viewBox.baseVal.width ? this.viewport.w * 0.8 / this.projectsSvg[largestSvg].viewBox.baseVal.width : 1;
@@ -655,7 +674,7 @@
           this.updateMorphingValues();
 
           this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
-          if (this.position === 'header') {            
+          if (this.position === 'header') {
             this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - this.verticalIncrement - this.morphingSVG.visibleY) / (this.verticalIncrement));
             this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
             this.mainCanvas.ctx.translate(0, -this.verticalIncrement*this.pageTransition.totalDuplications);
