@@ -117,6 +117,12 @@
       if (this.position !== 'header') {
         this.$parent.$on('mousemove', this.checkTitleHover)
       }
+
+      let suscribe = this.$store.subscribe((mutation, state) => {
+        if (mutation.type === 'TRIGGER_CLICK_EVENT') {
+          this.transitionToProject();
+        }
+      });
     },
     mounted() {
       this.init();
@@ -159,16 +165,16 @@
         this.setShape();
         this.updateMorphingValues();
         // Subscribe to state project update
+        // TODO : Remove this because too much update functions
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
-            this.maxLength = 0;
-            this.tick = 0;
-            this.states.length = 0;
-            this.sizes.length = 0;
-            this.titleAnimation.isComplete = false;
-            this.titleIndex =  this.$store.getters.activeIndex;
-
             if (this.$route.name === 'index') {
+              this.maxLength = 0;
+              this.tick = 0;
+              this.states.length = 0;
+              this.sizes.length = 0;
+              this.titleAnimation.isComplete = false;
+              this.titleIndex =  this.$store.getters.activeIndex;
               this.morphTitle();
             }
           }
