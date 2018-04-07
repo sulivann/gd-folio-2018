@@ -1,5 +1,11 @@
+.title-canvas{
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+}
+
 .home-project__title,
-.title-canvas svg {
+.title-canvas svg{
   z-index: 10;
   position: absolute;
   top: 0;
@@ -10,10 +16,23 @@
   pointer-events: none;
 }
 
+.home-project__title--bottom{
+  height: 100vh;
+}
+
 .home-svgs__container{
   position: absolute;
   overflow: hidden;
   display: flex;
   top: -10000px;
   left: -10000px;
+}
+
+.title__next-project{
+  position: absolute;
+  top: 80%;
+  left: 10%;
+  &.title__next-project--hidden{
+    display: none;
+  }
 }

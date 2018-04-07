@@ -6,6 +6,8 @@ const createStore = () => {
       activeIndex: 0,
       homeBeenHovered: false,
       loaderHidden: false,
+      mobileLayout: false,
+      pixelRatio: null
     },
     getters: {
         activeIndex (state) {
@@ -16,30 +18,52 @@ const createStore = () => {
         },
         loadingHidden (state) {
           return state.loadingHidden
+        },
+        mobileLayout (state) {
+          return state.mobileLayout
+        },
+        pixelRatio (state) {
+          return state.pixelRatio
         }
     },
     mutations: {
         SET_ACTIVEINDEX (state, activeIndex) {
-            state.activeIndex = activeIndex;
+          state.activeIndex = activeIndex;
         },
         SET_HOMEHOVER (state, homeBeenHovered) {
-          state.homeBeenHovered = homeBeenHovered
+          state.homeBeenHovered = homeBeenHovered;
         },
         SET_LOADERHIDDEN (state, loaderHidden) {
-          state.loaderHidden = loaderHidden
-        }
+          state.loaderHidden = loaderHidden;
+        },
+        SET_MOBILELAYOUT (state, mobileLayout) {
+          state.mobileLayout = mobileLayout;
+        },
+        SET_PIXELRATIO (state, pixelRatio) {
+          state.pixelRatio = pixelRatio;
+        },
+        TRIGGER_CLICK_EVENT () {}
       },
-      actions: {
-        setActiveIndex ({ commit }, activeIndex) {
-          commit('SET_ACTIVEINDEX', activeIndex)
-        },
-        setHomeHover ({ commit }, homeBeenHovered) {
-          commit('SET_HOMEHOVER', homeBeenHovered)
-        },
-        setLoaderHidden ({ commit }, loaderHidden) {
-          commit('SET_LOADERHIDDEN', loaderHidden)
-        }
+    actions: {
+      setActiveIndex ({ commit }, activeIndex) {
+        commit('SET_ACTIVEINDEX', activeIndex);
+      },
+      setHomeHover ({ commit }, homeBeenHovered) {
+        commit('SET_HOMEHOVER', homeBeenHovered);
+      },
+      setLoaderHidden ({ commit }, loaderHidden) {
+        commit('SET_LOADERHIDDEN', loaderHidden);
+      },
+      setMobileLayout ({ commit }, mobileLayout) {
+        commit('SET_MOBILELAYOUT', mobileLayout);
+      },
+      setpixelRatio ({ commit }, pixelRatio) {
+        commit('SET_PIXELRATIO', pixelRatio);
+      },
+      triggerClickEvent ({ commit }) {
+        commit('TRIGGER_CLICK_EVENT');
       }
+    }
     })
   };
 

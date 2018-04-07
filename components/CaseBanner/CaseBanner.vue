@@ -23,7 +23,8 @@
         ease: Sine.easeOut,
         delay: 0.8
       });
-
+      const scrollbars = Scrollbar.getAll();
+      if (scrollbars.length > 0) scrollbars[0].scrollTop = 0;
       this.handleParallax(null, this.$el);
     },
     methods: {

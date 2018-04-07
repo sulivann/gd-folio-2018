@@ -1,54 +1,57 @@
 <template>
   <div>
-    <div class="main">
-      <Loader v-if="showLoader" :projects="projects" :viewport="viewport"/>
-      <nuxt v-if="showContent" />
+    <div class="main" v-smooth-scroll>
+      <!-- <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/> -->
+      <title-canvas
+        :titles="data.titles"
+        :viewport="viewport"
+        :canvasPos="canvasPos"
+        :projectIndex="getIndex" />
+      <nuxt />
     </div>
   </div>
 </template>
 
 <script>
-
+// Data
+import data from '~/static/data.json';
+import Scrollbar from 'smooth-scrollbar';
 import Loader from '~/components/Loader/Loader.vue';
+import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
 
 export default {
-
+  computed: {
+    getIndex() {
+      if (this.$route.name === 'work-slug'){
+        return this.canvasPos === 'footer' ? this.setIndex(this.$store.getters.activeIndex + 1) : this.setIndex(this.$store.getters.activeIndex);
+      }
+    }
+  },
   data() {
     return {
-        projects: [
-        {
-          name: 'tesla',
-          homeSubtitle: 'Coucou plop',
-          homeIMGSRC: 'https://i.imgur.com/q56QGmj.jpg',
-          svgTitleVB: '0 0 764.85 142.36',
-          svgTitlePath: 'M52.21,31.56H.5V4H143V31.56H91.27V138.33H52.21Z M162.51,4H277.83V31.56H201.57V56.49h72.17V84H201.57V110.8H279.5v27.53h-117Z M341.06,94.8c.37,17.11,8.18,21,26.41,21,23.06,0,26.6-8.18,26.6-14.14,0-8.93-9.3-11.9-24.74-14.88l-19.16-3.72C328,78.81,304.79,70.62,304.79,45,304.79,12,335.3.5,366,.5,415.09.5,429,15.57,430.35,42.35H392.4c-1.12-13.76-12.28-15.81-24-15.81-17.11,0-24.55,5.77-24.55,13.21,0,9.11,12.28,11.53,26.6,14.51l18,3.72c24.55,5,44.64,13,44.64,39.62,0,37.39-37.76,44.27-67.89,44.27-54.13,0-63.24-23.25-63.24-47.06Z M458.24,4H497.3V110.8h75.89v27.53h-115Z M647.59,4h46.69L764,138.33H720.32l-12.65-26.6H629.55l-13,26.6H576.35Zm21.58,26L641.64,86.81h54.13Z'
-        },
-        {
-          name: 'vitality',
-          homeSubtitle: 'Coucou lol',
-          homeIMGSRC: 'https://i.imgur.com/pLLSYpV.jpg',
-          svgTitleVB: '10 10 1130.2 142.36',
-          svgTitlePath: 'M90.15,17.05c56.17,0,79.8,30.13,79.8,70.68s-23.62,70.68-79.8,70.68-79.8-30.13-79.8-70.68S34,17.05,90.15,17.05Zm0,113.83c29.76,0,39.62-19.53,39.62-43.15s-9.86-43.15-39.62-43.15S50.54,64.11,50.54,87.73,60.39,130.89,90.15,130.89Z M194.68,20.58H310V48.11H233.74V73h72.17v27.53H233.74v26.79h77.94v27.53h-117Z M338.83,20.58h39.06V154.88H338.83Z M407.65,20.58h39.06V127.35H522.6v27.53h-115Z M541.75,20.58h74.59c17.67,0,34.78,2.23,48.36,11.16,16.74,11,27.71,30.32,27.71,54.69,0,23.62-8.74,41.48-21.39,52.27-11.53,9.86-30.13,16.18-57.48,16.18h-71.8Zm39.06,108.25h17.67c31.62,0,53.75-4.84,53.75-41.67,0-31.62-18.41-40.55-47.25-40.55H580.81Z M717.15,20.58H832.48V48.11H756.21V73h72.17v27.53H756.21v26.79h77.94v27.53h-117Z M865,20.58H980.34V48.11H904.08V73h72.17v27.53H904.08v26.79H982v27.53H865Z M1011.77,20.58h75c30.13,0,52.83,13.39,52.83,44.08,0,27-16.93,42.59-57.29,42.59h-31.44v47.62h-39.06Zm39.06,60.64h24c14.69,0,24.55-3.72,24.55-17.11,0-11.53-7.63-17.48-21.58-17.48h-27Z',
-        },
-        {
-          name: 'badass',
-          homeSubtitle: 'virrir plop',
-          homeIMGSRC: 'https://i.imgur.com/kdUNToZ.jpg',
-          svgTitleVB: '20 20 959.64 142.36',
-          svgTitlePath: 'M18.6,20.08H97.65c35.71,0,50,16,50,33.11,0,15.25-11.16,27.16-28.46,31.43V85c20.83,1.86,34.23,14.69,34.23,31.81,0,18.23-13,37.57-55.62,37.57H18.6ZM56.54,75H80.91c16.74,0,26.6-4.65,26.6-15.07C107.51,48.73,99.14,45,84.07,45H56.54Zm0,54.5h35c12.28,0,21.76-3.35,21.76-15.25,0-11.16-10.23-15.44-19.9-15.44H56.54Z M225.25,20.08h46.69l69.75,134.3H298l-12.65-26.6H207.21l-13,26.6H154Zm21.58,26L219.3,102.86h54.13Z M359.16,20.08h74.59c17.67,0,34.78,2.23,48.36,11.16,16.74,11,27.71,30.32,27.71,54.69,0,23.62-8.74,41.48-21.39,52.27-11.53,9.86-30.13,16.18-57.48,16.18h-71.8Zm39.06,108.25H415.9c31.62,0,53.75-4.84,53.75-41.67,0-31.62-18.41-40.55-47.25-40.55H398.22Z M572.69,20.08h46.69l69.75,134.3H645.42l-12.65-26.6H554.65l-13,26.6H501.45Zm21.58,26-27.53,56.73h54.13Z M737.3,110.86c.37,17.11,8.18,21,26.41,21,23.06,0,26.6-8.18,26.6-14.14,0-8.93-9.3-11.9-24.74-14.88l-19.16-3.72C724.28,94.86,701,86.67,701,61c0-32.92,30.5-44.46,61.2-44.46,49.11,0,63.06,15.07,64.36,41.85H788.64c-1.12-13.76-12.28-15.81-24-15.81-17.11,0-24.55,5.77-24.55,13.21,0,9.11,12.28,11.53,26.6,14.51l18,3.72c24.55,5,44.64,13,44.64,39.62,0,37.39-37.76,44.27-67.89,44.27-54.13,0-63.24-23.25-63.24-47.06Z M885.17,110.86c.37,17.11,8.18,21,26.41,21,23.06,0,26.6-8.18,26.6-14.14,0-8.93-9.3-11.9-24.74-14.88l-19.16-3.72C872.15,94.86,848.9,86.67,848.9,61c0-32.92,30.5-44.46,61.2-44.46,49.11,0,63.06,15.07,64.36,41.85H936.51c-1.12-13.76-12.28-15.81-24-15.81C895.4,42.59,888,48.36,888,55.8c0,9.11,12.28,11.53,26.6,14.51l18,3.72c24.55,5,44.64,13,44.64,39.62,0,37.39-37.76,44.27-67.89,44.27-54.13,0-63.24-23.25-63.24-47.06Z',
-        },
-        {
-          name: 'oeildeep',
-          homeSubtitle: 'Coucou zizi',
-          homeIMGSRC: 'https://i.imgur.com/I7xcJSr.jpg',
-          svgTitleVB: '0 0 1053.54 135.3',
-          svgTitlePath: 'M104.36,134.8H57.49L.75.5H43.16L82.22,109.87,123,.5H160.9Z M174.66.5h39.06V134.8H174.66Z M281.24,28H229.53V.5H372V28H320.3V134.8H281.24Z M427.44.5h46.69l69.75,134.3H500.17l-12.65-26.6H409.4l-13,26.6H356.2Zm21.58,26L421.49,83.27h54.13Z M561.36.5h39.06V107.27h75.89V134.8h-115Z M691.74.5H730.8V134.8H691.74Z M798.32,28H746.61V.5H889.09V28H837.38V134.8H798.32Z M953.07,87,892.62.5h48L975,57.79l34-57.29h43.53L992.13,87v47.8H953.07Z',
-        },
-      ],
+      activeIndex: this.$route.path.search('/work/') !== -1  ? this.$store.dispatch('setActiveIndex', this.setIndex(Object.keys(data.data).indexOf(this.$route.params.slug))) : 0,
+      data: {
+        home_img: data.data[Object.keys(data.data)[this.$store.getters.activeIndex]].home_img,
+        role: data.data[Object.keys(data.data)[this.$store.getters.activeIndex]].role,
+        titles: Object.keys(data.data).reduce((previous, key) => {
+          previous.push({
+            name: data.data[key].slug,
+            svgTitleVB: data.data[key].svgTitleVB,
+            svgTitlePath: data.data[key].svgTitlePath,
+          });
+          return previous;
+        }, []),
+      },
       viewport: {
         w: process.browser ? window.innerWidth : undefined,
         h: process.browser ? window.innerHeight : undefined,
       },
+      scrolling: false,
+      mouse: {
+        posX: '',
+        posY: '',
+      },
+      canvasPos: 'center',
       showLoader: true,
       showContent: false,
     }
@@ -56,14 +59,36 @@ export default {
 
   components: {
     Loader,
+    TitleCanvas
   },
 
   mounted() {
     this.init();
   },
 
+  beforeMount() {
+    this.setPixelRatio();
+  },
+
   methods: {
     init() {
+      window.onNuxtReady((app) => {
+        app.$nuxt.$on('routeChanged', (to, from) => {
+          // const scrollbars = Scrollbar.getAll();
+          // if (scrollbars.length > 0) scrollbars[0].scrollTop = 0;
+          if (from.name === 'index') {
+
+          } else if (from.name === 'work-slug' && to.name === 'work-slug'){
+            const titleCanvas = document.querySelector('.title-canvas');
+            titleCanvas.style.top = 0;
+            titleCanvas.style.bottom = 'auto';            
+            this.canvasPos = 'header';
+          }
+          // console.log(from, to);
+        })
+      })
+      this.resizeEvent = window.addEventListener('resize', this.checkMobileLayout);
+      this.setMobileLayout();
       let subscribe = this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'SET_LOADERHIDDEN' && this.$store.state.loaderHidden === true) {
           this.showContent = true;
@@ -72,7 +97,75 @@ export default {
           }, 200);
         }
       });
-    }
+      document.addEventListener('mousemove', (e) => this.updateMousePosition(e));
+      document.addEventListener('wheel', this.wheelEvent);
+      document.addEventListener('scroll', this.wheelEvent);
+      let suscribe = this.$store.subscribe((mutation, state) => {
+        if (mutation.type === 'SET_ACTIVEINDEX' && this.$store.state.homeBeenHovered === true) {
+          this.updateData();
+        }
+      });
+    },
+    wheelEvent(e) {
+      if (this.$route.name !== 'work-slug') return
+      const scrollbars = Scrollbar.getAll();
+      const titleCanvas = document.querySelector('.title-canvas');
+      if (scrollbars[0].offset.y > document.querySelector('.title-canvas').getBoundingClientRect().height) {
+      }
+
+      if (scrollbars[0].scrollTop > window.innerHeight) {
+        titleCanvas.style.top = 'auto';
+        titleCanvas.style.bottom = 0;
+        this.canvasPos = 'footer';
+      } else {
+        titleCanvas.style.top = 0;
+        titleCanvas.style.bottom = 'auto';
+        this.canvasPos = 'header';
+      }
+    },
+    updateMousePosition(e) {
+      this.mouse.posX = e.clientX;
+      this.mouse.posY = e.clientY;
+      this.$emit('mousemove', this.mouse);
+    },
+    updateData() {
+      this.data = {
+        home_img: data.data[Object.keys(data.data)[this.$store.getters.activeIndex]].home_img,
+        role: data.data[Object.keys(data.data)[this.$store.getters.activeIndex]].role,
+        titles: Object.keys(data.data).reduce((previous, key) => {
+          previous.push({
+            name: data.data[key].slug,
+            svgTitleVB: data.data[key].svgTitleVB,
+            svgTitlePath: data.data[key].svgTitlePath,
+          });
+          return previous;
+        }, []),
+      }
+    },
+    setIndex(index) {
+      if (index > Object.keys(data.data).length - 1) {
+          index = 0;
+      }
+      if (index < 0) {
+          index = Object.keys(data.data).length - 1;
+      }
+      return index;
+    },
+    setMobileLayout() {
+      if (window.innerWidth <= 900) {
+        this.$store.dispatch('setMobileLayout', true);
+      } else {
+        this.$store.dispatch('setMobileLayout', false);
+      }
+    },
+    setPixelRatio() {
+      const ua = new UAParser().getResult();
+      if (ua.browser.name === 'Chrome' && parseInt(ua.browser.major) >= 65 && ua.os.name === 'Mac OS' && parseInt(ua.os.version.substring(3, 5)) <= 11) {
+        this.$store.dispatch('setpixelRatio', 1);
+      } else {
+        this.$store.dispatch('setpixelRatio', 1);
+      }
+    },
   }
 }
 </script>
@@ -81,7 +174,7 @@ export default {
   .main {
     height: 100vh;
     width: 100%;
-    background-color: #0D0D0D;
+    // background-color: #0D0D0D;
 
     &::before {
       content: '';
@@ -105,9 +198,9 @@ export default {
       width: 100vh;
       height: 100vh;
       border-radius: 50%;
-      background: -moz-radial-gradient(center, ellipse cover,  rgba(255, 255, 255, 0.05) 0%, transparent); /* FF3.6-15 */
-      background: -webkit-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0.05) 0%, transparent); /* Chrome10-25,Safari5.1-6 */
-      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      // background: -moz-radial-gradient(center, ellipse cover,  rgba(255, 255, 255, 0.05) 0%, transparent); /* FF3.6-15 */
+      // background: -webkit-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0.05) 0%, transparent); /* Chrome10-25,Safari5.1-6 */
+      // background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       mix-blend-mode: soft-light;
       //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1affffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
     }

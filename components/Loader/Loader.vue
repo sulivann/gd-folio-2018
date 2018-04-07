@@ -2,13 +2,13 @@
   <div class="loading-canvas">
     <canvas class="loading-home-project__title"></canvas>
     <div class="loading-home-svgs__container loading-container">
-      <svg v-for="(project, index) in projects"
-            :key="index"
-            class="loading-home-svgs__project-title"
-            width="100%" height="100%"
-            :viewBox="project.svgTitleVB"
-            preserveAspectRatio="xMidYMid meet">
-        <path class="loading-project" :d="project.svgTitlePath" />
+      <svg v-for="(title, index) in titles"
+        :key="index"
+        class="loading-home-svgs__project-title"
+        width="100%" height="100%"
+        :viewBox="title.svgTitleVB"
+        preserveAspectRatio="xMidYMid meet">
+          <path class="loading-project" :d="title.svgTitlePath" />
       </svg>
       <svg class="loading-morph-shape" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
         <path id="loading-shape" style="fill: #000" />
@@ -33,7 +33,7 @@ import { assets } from '~/static/assets.json';
 
 export default {
   props: [
-    'projects',
+    'titles',
     'viewport',
   ],
   data() {
@@ -57,7 +57,7 @@ export default {
       svgHeight: '',
       states: [],
       sizes: [],
-      titleIndex: this.$store.state.activeIndex,
+      titleIndex: this.$store.getters.activeIndex,
       maxRatio: 0,
       tick: 0,
       resizeTimer: undefined,
@@ -75,10 +75,6 @@ export default {
         visibleWidth: '',
         visibleX: '',
         visibleY: '',
-      },
-      mouse: {
-        posX: undefined,
-        posY: undefined,
       },
       title: {
         minX: undefined,
@@ -139,7 +135,7 @@ export default {
       setTimeout(() => {
         this.startDuplications();
         this.render();
-      }, 1000);
+      }, 100);
     },
 
     load() {
@@ -174,6 +170,10 @@ export default {
     },
     setEventListeners() {
       window.addEventListener('resize', this.resize)
+    },
+    
+    cancelEventListeners() {
+      window.removeEventListener('resize', this.resize);
     },
 
     onUpdate() {
@@ -347,11 +347,14 @@ export default {
     drawStaticTitle(data) {
       const ratioX = ((this.mainCanvas.el.width  / this.pixelRatio/ 2) - (this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2) - this.morphingSVG.visibleX);
       let ratioY;
+      // Adapt the Y position to the page
       if (this.finalPosition == 'center') {
         ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((- 1)  + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
       } else if (this.finalPosition == 'header') {
-        ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * this.loadingAnimation.totalDuplications - 1;
+        console.log((this.morphingSVG.visibleHeight / 2 / window.devicePixelRatio));
+        ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * this.loadingAnimation.totalDuplications + (this.morphingSVG.visibleHeight / 2 / window.devicePixelRatio) - (this.morphingSVG.visibleY / window.devicePixelRatio / 2);
       }
+
       this.mainCanvas.ctx.beginPath();
       this.mainCanvas.ctx.strokeWidth = 2;
       const bezierpoints = this.toBezier(data);
@@ -470,7 +473,7 @@ export default {
     },
 
     startMorphingTitle(position) {
-      this.verticalIncrement = this.viewport.h / 200 * this.pixelRatio;
+      this.verticalIncrement = this.viewport.h / (100 / this.pixelRatio);
       if (position === 'center') {
         this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + this.morphingSVG.visibleHeight) / 2 / this.verticalIncrement)));
       } else {
@@ -535,10 +538,6 @@ export default {
         // mainCanvas.ctx.setTransform(1,0,0,1,0, -canvasRatio * verticalIncrement);
       }, 100);
     },
-
-    cancelEventListeners() {
-      document.removeEventListener('click', this.clickEvent);
-    }
   }
 }
 </script>
