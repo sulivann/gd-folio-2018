@@ -630,7 +630,7 @@
         setTimeout(() => {
           this.updateActiveProject();
           this.routeToProject();
-        }, 1000);
+        }, 1500);
       },
 
       routeToProject() {
