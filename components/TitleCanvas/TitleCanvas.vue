@@ -117,6 +117,12 @@
       if (this.position !== 'header') {
         this.$parent.$on('mousemove', this.checkTitleHover)
       }
+
+      let suscribe = this.$store.subscribe((mutation, state) => {
+        if (mutation.type === 'TRIGGER_CLICK_EVENT') {
+          this.transitionToProject();
+        }
+      });
     },
     mounted() {
       this.init();
@@ -159,11 +165,10 @@
         this.setShape();
         this.updateMorphingValues();
         // Subscribe to state project update
+        // TODO : Remove this because too much update functions
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
-            
             if (this.$route.name === 'index') {
-              console.log(this.$route)
               this.maxLength = 0;
               this.tick = 0;
               this.states.length = 0;
@@ -625,7 +630,7 @@
         setTimeout(() => {
           this.updateActiveProject();
           this.routeToProject();
-        }, 1600);
+        }, 1000);
       },
 
       routeToProject() {

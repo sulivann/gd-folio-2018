@@ -2,7 +2,9 @@
   <div class="case-video" v-scroll="handleFadeIn">
     <video
       autoplay
+      loop
       muted
+      ref="video"
       v-on:click="handleVideoClick">
       <template v-for="(source, index) in sources">
         <source
@@ -12,6 +14,9 @@
       </template>
       Votre navigateur ne permet pas de lire les vidéos HTML5.
     </video>
+    <div class="case-video__control" v-if="paused" v-on:click="handleVideoClick">
+      Play
+    </div>
   </div>
 </template>
 
@@ -23,13 +28,20 @@
 import { TweenMax } from 'gsap';
 
 export default {
+  data() {
+    return {
+      paused: false
+    }
+  },
   props: ['sources'],
   methods: {
-    handleVideoClick (event) {
-      if (event.target.paused) {
-        event.target.play();
+    handleVideoClick () {
+      if (this.$refs.video.paused) {
+        this.$refs.video.play();
+        this.paused = false;
       } else {
-        event.target.pause();
+        this.$refs.video.pause();
+        this.paused = true;
       }
     },
     handleFadeIn: function(evt, el) {
@@ -45,6 +57,6 @@ export default {
         });
       }
     }
-  },
+  }
 }
 </script>

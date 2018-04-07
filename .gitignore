@@ -1,5 +1,11 @@
 # dependencies
-node_modules
+!/node_modules
+/node_modules/*
+!/node_modules/gsap
+/node_modules/gsap/*
+!/node_modules/gsap/CustomEase.js
+!/node_modules/gsap/MorphSVGPlugin.js
+!/.gitignore
 
 # logs
 npm-debug.log
@@ -9,3 +15,5 @@ npm-debug.log
 
 # Nuxt generate
 dist
+
+.DS_Store

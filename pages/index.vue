@@ -13,6 +13,7 @@
 import data from '~/static/data.json';
 
 import { TimelineMax, TweenMax, Sine } from 'gsap';
+
 // import HomeCase from '~/components/HomeCase/HomeCase.vue';
 import HomeMenu from '~/components/HomeMenu/HomeMenu.vue';
 import HomeImages from '~/components/HomeImages/HomeImages.vue';
@@ -26,12 +27,29 @@ export default {
     leave (el, done) {
       let tl = new TimelineMax({ onComplete: done });
       const homeImages = document.querySelector('.home-images');
+      const homeMenu = document.querySelector('.home-menu');
+      const projectSubtitle = document.querySelector('.project-subtitle');
 
-      tl.add('leave');
+      tl.add('first-step');
+
       tl.to(homeImages, 0.7, {
         opacity: 0,
-        ease: Sine.easeIn
-      }, 'leave');
+        ease: Expo.easeOut
+      }, 'first-step');
+
+      tl.add('second-step');
+
+      tl.to(homeMenu, 0.7, {
+        opacity: 0,
+        ease: Expo.easeOut
+      }, 'second-step');
+
+      tl.to(projectSubtitle, 0.7, {
+        opacity: 0,
+        ease: Expo.easeOut
+      }, 'second-step');
+
+      tl.set({}, {}, 2);
     }
   },
 
