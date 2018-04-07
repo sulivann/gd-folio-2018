@@ -161,14 +161,15 @@
         // Subscribe to state project update
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
-            this.maxLength = 0;
-            this.tick = 0;
-            this.states.length = 0;
-            this.sizes.length = 0;
-            this.titleAnimation.isComplete = false;
-            this.titleIndex =  this.$store.getters.activeIndex;
-
+            
             if (this.$route.name === 'index') {
+              console.log(this.$route)
+              this.maxLength = 0;
+              this.tick = 0;
+              this.states.length = 0;
+              this.sizes.length = 0;
+              this.titleAnimation.isComplete = false;
+              this.titleIndex =  this.$store.getters.activeIndex;
               this.morphTitle();
             }
           }
@@ -252,15 +253,14 @@
           this.pageBackHomeTransitionEnd(data);
           return
         }
-
         // If the title is not animating
         if ((this.titleAnimation.isComplete === undefined &&
              this.pageTransition.isComplete !== false &&
              this.backHomeTransition.isComplete === undefined) || 
-            (this.title.pageTransition === undefined &&
+            (this.pageTransition.isComplete === undefined &&
              this.titleAnimation.isComplete === undefined &&
              this.backHomeTransition.isComplete === undefined)) {
-          this.drawStaticTitle(data);
+               this.drawStaticTitle(data);
           return;
         }
         // if title animation is on
@@ -272,20 +272,20 @@
         if (this.titleAnimation.isComplete === true) {
           this.projectTransitionEnd(data);
           return
-        }
+        }        
       },
 
       /*
       * Draw the project title when no animation is going on
       */
-      drawStaticTitle() {
+      drawStaticTitle() {        
         const data = this.shape.getAttribute("d");
         // this.svgWidth = document.querySelector('#shape').getBoundingClientRect().width
         // this.svgHeight = Math.floor(document.querySelector('#shape').getBoundingClientRect().height);
         const ratioX = ((this.mainCanvas.el.width / this.pixelRatio / 2) - (this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2) - this.morphingSVG.visibleX);
         let ratioY;
         if (this.position === 'header') {
-          ratioY = -((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3);
+          ratioY = -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
         } else if (this.position === 'footer') {
           ratioY = this.mainCanvas.el.height / this.pixelRatio - ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) * 2 / 3);
         } else {
@@ -395,18 +395,18 @@
             this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
           }
         }
-        for (let j = 0; j <= duplicates; j++) {
+        for (let j = 0; j < duplicates; j++) {
           const ratioX = this.sizes[j];
           let ratioY
           if (this.position === 'footer'){
             ratioY = this.mainCanvas.el.height / this.pixelRatio - ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) * 2 / 3) - (j * this.verticalIncrement);
           } else {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (j * this.verticalIncrement) - this.morphingSVG.visibleY;
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY / 2) - (j * this.verticalIncrement);
           }
           this.title.minY = this.ratioY + (this.canvasRatio * this.verticalIncrement);
           this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
-          if (ratioY <= this.canvasRatio * this.verticalIncrement - (this.title.maxY - this.title.minY) / 2) {
-              ratioY = this.canvasRatio * this.verticalIncrement - (this.title.maxY - this.title.minY) / 2 
+          if (ratioY <=  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY))) {
+              ratioY =  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
           }
           this.mainCanvas.ctx.beginPath();
           this.mainCanvas.ctx.strokeWidth = 2;
@@ -434,13 +434,23 @@
           this.tick = Math.trunc(this.tick / 2) + (Math.trunc(this.tick / 2) % 2);
           this.displayedDuplicatas = this.sizes.length;
         }
+        let hasReachedTop = false;
         for (let j = 0; j < duplicates; j++ ) {
           const ratioX = this.sizes[j + this.sizes.length - duplicates];
           let ratioY;
           if (this.position === 'footer') {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY * 2 / 3) - (j + this.sizes.length - duplicates + 1) * this.verticalIncrement;
+            ratioY = this.mainCanvas.el.height / this.pixelRatio - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY * 2 / 3) - (j + this.sizes.length - duplicates) * this.verticalIncrement;
           } else {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (j + this.sizes.length - duplicates + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY / 2) - (j + this.sizes.length - duplicates) * this.verticalIncrement;
+          }
+
+          if (ratioY <=  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY))) {
+            if (hasReachedTop && j !== 1) {
+              continue;
+            } else {
+              ratioY =  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
+              hasReachedTop = true;
+            }
           }
           this.mainCanvas.ctx.beginPath();
           this.mainCanvas.ctx.strokeWidth = 2;
@@ -454,6 +464,11 @@
             //mainCanvas.ctx.translate(0, -pageTransition.totalDuplications*verticalIncrement);
             this.pageTransition.isComplete = undefined;
             this.position = 'header';
+            const titleCanvas = document.querySelector('.title-canvas');
+            titleCanvas.style.top = 0;
+            titleCanvas.style.bottom = 'auto';
+            const scrollbars = Scrollbar.getAll();
+            if (scrollbars.length > 0) scrollbars[0].scrollTop = 0;
             return;
           }
         }
@@ -474,7 +489,7 @@
         this.pageTransition.initialIncrement = totalTicks;
         this.pageTransition.isComplete = true;
         TweenMax
-        .to(this.pageTransition, 0.3, {
+        .to(this.pageTransition, 0.6, {
           duplications: 1,
           ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
         });
@@ -543,6 +558,7 @@
       },
 
       checkTitleHover(mouse) {
+        if (this.position === 'header') return;
         this.mouse.posX = mouse.posX;
         this.mouse.posY = mouse.posY;
 
@@ -599,7 +615,7 @@
           setTimeout(() => {
             this.pageTransition.isComplete = false;
             TweenMax
-            .to(this.pageTransition, 0.3, {
+            .to(this.pageTransition, 0.8, {
               duplications: this.pageTransition.totalDuplications,
               ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
               delay: 0.05,
@@ -609,7 +625,7 @@
         setTimeout(() => {
           this.updateActiveProject();
           this.routeToProject();
-        }, 2000);
+        }, 1600);
       },
 
       routeToProject() {
@@ -642,12 +658,13 @@
         // * Divide the distance by the value of the increment to get the number of duplications
         // (this.mainCanvas.el.height / this.pixelRatio - morphSvgVisibleVertical) / this.verticalIncrement
         let svgVertical;
-        if (this.position === 'center' || this.position === 'header'){
-          svgVertical = ((this.morphingSVG.visibleHeight) / 2);
-          this.pageTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio - svgVertical +  this.morphingSVG.visibleY) / 2) / this.verticalIncrement);
+        if (this.position === 'center'){
+          svgVertical = ((this.morphingSVG.visibleHeight +  this.morphingSVG.visibleY) / 3 * 2);
+          this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2) - svgVertical) / this.verticalIncrement);
         } else {
-          svgVertical = ((this.morphingSVG.visibleHeight) / 3 * 2);
-          this.pageTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio - svgVertical +  this.morphingSVG.visibleY)) / this.verticalIncrement);
+          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
+          
+          this.pageTransition.totalDuplications = Math.floor((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
         }
       },
       /*
@@ -673,7 +690,7 @@
           this.mainCanvas.ctx.setTransform(this.pixelRatio,0,0,this.pixelRatio,0,0);
           this.updateMorphingValues();
 
-          this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
+          this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width, this.mainCanvas.el.height);
           if (this.position === 'header') {
             this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - this.verticalIncrement - this.morphingSVG.visibleY) / (this.verticalIncrement));
             this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);

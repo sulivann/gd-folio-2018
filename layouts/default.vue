@@ -22,7 +22,9 @@ import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
 export default {
   computed: {
     getIndex() {
-      return this.canvasPos === 'footer' ? this.setIndex(this.$store.getters.activeIndex + 1) : this.setIndex(this.$store.getters.activeIndex);
+      if (this.$route.name === 'work-slug'){
+        return this.canvasPos === 'footer' ? this.setIndex(this.$store.getters.activeIndex + 1) : this.setIndex(this.$store.getters.activeIndex);
+      }
     }
   },
   data() {
@@ -77,6 +79,9 @@ export default {
           if (from.name === 'index') {
 
           } else if (from.name === 'work-slug' && to.name === 'work-slug'){
+            const titleCanvas = document.querySelector('.title-canvas');
+            titleCanvas.style.top = 0;
+            titleCanvas.style.bottom = 'auto';            
             this.canvasPos = 'header';
           }
           // console.log(from, to);
@@ -102,6 +107,7 @@ export default {
       });
     },
     wheelEvent(e) {
+      if (this.$route.name !== 'work-slug') return
       const scrollbars = Scrollbar.getAll();
       const titleCanvas = document.querySelector('.title-canvas');
       if (scrollbars[0].offset.y > document.querySelector('.title-canvas').getBoundingClientRect().height) {
@@ -137,11 +143,11 @@ export default {
       }
     },
     setIndex(index) {
-      if (index > data.data.length - 1) {
+      if (index > Object.keys(data.data).length - 1) {
           index = 0;
       }
       if (index < 0) {
-          index = data.data.length - 1;
+          index = Object.keys(data.data).length - 1;
       }
       return index;
     },
