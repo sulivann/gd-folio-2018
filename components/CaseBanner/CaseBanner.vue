@@ -32,7 +32,6 @@
         const scrollbars = Scrollbar.getAll();
         if (scrollbars.length > 0) {
           let distance = Math.abs(scrollbars[0].scrollTop) * 0.1;
-          el.style.transform = `translate3d(0, -${distance}px, 0)`;
         }
       }
     }
