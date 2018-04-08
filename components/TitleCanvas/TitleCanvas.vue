@@ -466,16 +466,22 @@
             this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
           }
         }
+        let hasReachedTop = false;
         for (let j = 0; j < duplicates; j++) {
           const ratioX = this.sizes[j];
           let ratioY
           if (this.position === 'footer'){
-            ratioY = this.mainCanvas.el.height / this.pixelRatio - ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) * 2 / 3) - (j * this.verticalIncrement);
+            ratioY = this.mainCanvas.el.height / this.pixelRatio - ((this.morphingSVG.visibleHeight) * 2 / 3) + this.morphingSVG.visibleY - (j * this.verticalIncrement);
           } else {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (j * this.verticalIncrement);
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - this.morphingSVG.visibleY - (j * this.verticalIncrement);
           }
           if (ratioY <=  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY))) {
-            ratioY =  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
+            if (hasReachedTop && duplicates !== this.pageTransition.totalDuplications) {
+              continue;
+            } else {
+              ratioY =  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
+              hasReachedTop = true;
+            }
           }
           this.mainCanvas.ctx.beginPath();
           this.mainCanvas.ctx.strokeWidth = 2;
@@ -761,7 +767,6 @@
         if (this.position === 'center'){
           svgVertical = ((this.morphingSVG.visibleHeight +  this.morphingSVG.visibleY) / 3 * 2);
           this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
-          console.log(this.pageTransition.totalDuplications);
         } else {
           svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);          
           this.pageTransition.totalDuplications = Math.floor((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
