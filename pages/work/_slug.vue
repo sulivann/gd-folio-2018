@@ -1,18 +1,19 @@
 <template>
   <div class="work">
-    <!-- <title-canvas :titles="titles"
-      :viewport="viewport"
-      position="header"/> -->
-    <case-heading
-      :role="data.role"
-      :contextLabel="data.contextLabel"
-      :context="data.context"
-      :year="data.year"
-      :projectNumber="data.projectNumber"/>
-    <case-description
-      :description="data.description" />
     <case-banner
       :banner="data.banner"/>
+    <case-title
+      :title="data.title" />
+    <div class="work__header">
+      <case-heading
+        :role="data.role"
+        :contextLabel="data.contextLabel"
+        :context="data.context"
+        :year="data.year"
+        :projectNumber="data.projectNumber"/>
+      <case-description
+        :description="data.description" />
+    </div>
     <div class="work__element" v-for="(element, index) in data.elements" :key='index'>
       <case-video
         v-if="element.type === 'video'"
@@ -29,20 +30,14 @@
 
 <style lang="scss">
   .work {
-    // height: 100vh;
-    // width: 100%;
-    // background-color: #0D0D0D;
-    // overflow: hidden;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
     padding-bottom: $space-xtra-large;
 
-    &__footer {
-      position: absolute;
-      width: 100%;
-      height: 100vh;
-      bottom: -40vh;
+    &__header {
+      max-width: 550px;
+      width: 38%;
+      margin-top: $space-x-large;
+      margin-bottom: $space-x-large;
+      margin-left: 45%;
     }
 
     &__element:last-child div {
@@ -63,7 +58,7 @@ import CaseBanner from '~/components/CaseBanner/CaseBanner.vue';
 import CaseMockUp from '~/components/CaseMockUp/CaseMockUp.vue';
 import CaseText from '~/components/CaseText/CaseText.vue';
 import CaseVideo from '~/components/CaseVideo/CaseVideo.vue';
-import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
+import CaseTitle from '~/components/CaseTitle/CaseTitle.vue';
 
 export default {
   validate({ params }) {
@@ -128,7 +123,7 @@ export default {
     CaseMockUp,
     CaseText,
     CaseVideo,
-    TitleCanvas
+    CaseTitle
   }
 };
 </script>

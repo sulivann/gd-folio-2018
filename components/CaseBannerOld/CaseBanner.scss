@@ -1,0 +1,22 @@
+$case-banner-height: 400px;
+$case-banner-logo-height: 150px;
+
+.case-banner {
+  height: $case-banner-height;
+  overflow: hidden;
+  margin-top: $space-xxx-large;
+  margin-bottom: $space-x-large;
+  position: relative;
+  width: 100%;
+  opacity: 0;
+
+  &__container,
+  &__img {
+    width: 100%;
+  }
+
+  &__logo {
+    @include absolute-center;
+    height: $case-banner-logo-height;
+  }
+}

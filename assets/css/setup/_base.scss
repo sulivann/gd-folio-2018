@@ -18,3 +18,15 @@ a {
   width: 100vw;
   height: auto;
 }
+
+h1 {
+  @include as-h1;
+}
+
+h2 {
+  @include as-h2;
+}
+
+p {
+  @include as-p;
+}

@@ -1,0 +1,17 @@
+$case-title-max-width: 770px;
+$case-title-text-max-width: 620px;
+$case-title-margin-y: 180px;
+
+.case-title {
+  width: 54%;
+  max-width: $case-title-max-width;
+  margin: 0 auto;
+  margin-top: -$case-title-margin-y;
+  position: absolute;
+  left: 0;
+  right: 0;
+
+  &__text {
+   max-width: $case-title-text-max-width;
+  }
+}
