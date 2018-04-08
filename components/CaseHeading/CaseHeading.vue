@@ -1,24 +1,16 @@
 <template>
   <div class="case-heading">
-    <div class="case-heading__left-column">
-      <div class="case-heading__element">
-        <span class="case-heading__label">Role</span>
-        <span class="case-heading__separator">/</span>
-        <span class="case-heading__role">{{role}}</span>
-      </div>
-      <div class="case-heading__element">
-        <span class="case-heading__label" v-if="contextLabel">{{contextLabel}}</span>
-        <span class="case-heading__separator" v-if="contextLabel">/</span>
-        <span class="case-heading__role">{{context}}</span>
-      </div>
-      <div class="case-heading__element">
-        <span class="case-heading__label">Year</span>
-        <span class="case-heading__separator">/</span>
-        <span class="case-heading__role">{{year}}</span>
-      </div>
+    <div class="case-heading__element">
+      <span class="case-heading__role">{{projectNumber}}</span>
     </div>
-    <div class="case-heading__right-column">
-      <div class="case-heading__case-number">{{projectNumber}}</div>
+    <div class="case-heading__element">
+      <span class="case-heading__role">{{role}}</span>
+    </div>
+    <div class="case-heading__element">
+      <span class="case-heading__role">{{year}}</span>
+    </div>
+    <div class="case-heading__element">
+      <span class="case-heading__role">{{context}}</span>
     </div>
   </div>
 </template>

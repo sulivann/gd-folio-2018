@@ -19,6 +19,18 @@ a {
   height: auto;
 }
 
+h1 {
+  @include as-h1;
+}
+
+h2 {
+  @include as-h2;
+}
+
+p {
+  @include as-p;
+}
+
 .js--already-animated{
   opacity: 1 !important;
 }

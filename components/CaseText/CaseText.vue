@@ -1,6 +1,7 @@
 <template>
   <div class="case-text" v-scroll="handleFadeIn">
-    <p>{{text}}</p>
+    <h2 class="case-text__title">Focusing on discovery</h2>
+    <p class="case-text__content">{{text}}</p>
   </div>
 </template>
 

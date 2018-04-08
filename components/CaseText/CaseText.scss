@@ -1,8 +1,16 @@
 .case-text {
-  max-width: 565px;
-  width: 39%;
-  margin: 0 auto;
+  @include container-wide;
   margin-bottom: $space-xx-large;
   transition: opacity 0.3s ease-in;
   opacity: 0;
+  display: flex;
+
+  &__title {
+    width: 25%;
+    margin-right: $space-x-large;
+  }
+
+  &__content {
+    flex: 1;
+  }
 }

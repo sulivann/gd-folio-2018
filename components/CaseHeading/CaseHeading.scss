@@ -4,21 +4,15 @@ $case-heading-label-width: 60px;
   @include typo-heading;
   @include container;
 
-  display: flex;
-  justify-content: space-between;
-  padding-top: $space-xtra-large;
+  width: 100%;
   opacity: 0;
 
-  &__element:not(:last-child) {
-    margin-bottom: $space-base;
+  &__element:first-child {
+    margin-right: 60px;
   }
 
-  &__label {
-    width: $case-heading-label-width;
+  &__element {
     display: inline-block;
-  }
-
-  &__separator {
-    margin-right: $space-small;
+    margin-right: 50px;
   }
 }
