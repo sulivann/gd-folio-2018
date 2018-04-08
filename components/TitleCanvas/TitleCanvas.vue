@@ -120,7 +120,7 @@
       }
 
       let suscribe = this.$store.subscribe((mutation, state) => {
-        if (mutation.type === 'TRIGGER_CLICK_EVENT') {
+        if (mutation.type === 'TRIGGER_TRANSITION_EVENT') {
           this.transitionToProject();
         }
         if (mutation.type === 'TRIGGER_BACK_TO_CENTER_EVENT') {
@@ -160,6 +160,7 @@
       },
       projectIndex: function(val) {
         this.titleIndex = val === undefined ? this.$store.getters.activeIndex : val;
+        console.log(this.titleIndex);
         this.setShape();
       }
     },
@@ -186,7 +187,6 @@
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
             if (this.$route.name === 'index') {
-              console.log('wowowo');
               this.maxLength = 0;
               this.tick = 0;
               this.states.length = 0;
@@ -713,9 +713,6 @@
           duplications: this.backHomeTransition.totalDuplications,
           ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
         });
-        setTimeout(() => {
-          this.routeToHome();
-        }, 1500);
       },
 
       backHomeTriggerEnd(totalTicks) {

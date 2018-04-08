@@ -65,7 +65,7 @@ export default {
     mode: 'out-in',
     css: false,
     leave (el, done) {
-      if (this.$route.name === 'index') {
+      if (this.$route.name === 'index' || this.$route.name === 'all-works') {
         this.$store.dispatch('triggerBackToCenter');
         setTimeout(() => {
           done();

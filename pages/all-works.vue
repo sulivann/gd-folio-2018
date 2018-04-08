@@ -194,7 +194,14 @@ export default {
 
       tl.set({}, {}, 2);
     },
-    handleClick() {
+    handleClick(event) {
+      let index = event.target.dataset.index;
+      if (index !== undefined) {
+        this.targeted = parseInt(event.target.dataset.index);
+      }
+
+      clearInterval(this.interval);
+
       const slug = Object.values(this.data)[this.activeIndex].slug;
       this.$store.dispatch('triggerTransitionEvent');
     },

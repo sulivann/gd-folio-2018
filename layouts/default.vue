@@ -24,6 +24,8 @@ export default {
     getIndex() {
       if (this.$route.name === 'work-slug'){
         return this.canvasPos === 'footer' ? this.setIndex(this.$store.getters.activeIndex + 1) : this.setIndex(this.$store.getters.activeIndex);
+      } else if (this.$route.name === 'all-works') {
+        return this.setIndex(this.$store.getters.activeIndex);
       }
     }
   },
@@ -51,7 +53,7 @@ export default {
         posX: '',
         posY: '',
       },
-      canvasPos: 'center',
+      canvasPos: this.$route.name === 'work-slug' ? 'header' : 'center',
       showLoader: true,
       showContent: false,
     }
@@ -76,17 +78,18 @@ export default {
         app.$nuxt.$on('routeChanged', (to, from) => {
           // const scrollbars = Scrollbar.getAll();
           // if (scrollbars.length > 0) scrollbars[0].scrollTop = 0;
-          if (from.name === 'index') {
-
-          } else if (from.name === 'work-slug' && to.name === 'work-slug'){
+          if (
+            from.name === 'work-slug' && to.name === 'work-slug' ||
+            from.name === 'index' && to.name === 'work-slug'
+          ){
             const titleCanvas = document.querySelector('.title-canvas');
             titleCanvas.style.top = 0;
-            titleCanvas.style.bottom = 'auto';            
+            titleCanvas.style.bottom = 'auto';
             this.canvasPos = 'header';
           }
           // console.log(from, to);
         })
-      })
+      });
       this.resizeEvent = window.addEventListener('resize', this.checkMobileLayout);
       this.setMobileLayout();
       let subscribe = this.$store.subscribe((mutation, state) => {

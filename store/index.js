@@ -42,7 +42,7 @@ const createStore = () => {
         SET_PIXELRATIO (state, pixelRatio) {
           state.pixelRatio = pixelRatio;
         },
-        TRIGGER_CLICK_EVENT () {},
+        TRIGGER_TRANSITION_EVENT () {},
         TRIGGER_BACK_TO_CENTER_EVENT () {}
       },
     actions: {
