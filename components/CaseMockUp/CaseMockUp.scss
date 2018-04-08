@@ -1,7 +1,7 @@
 .case-mock-up {
   @include container-wide;
   opacity: 0;
-
+  transition: opacity 0.3s ease-in;
   &__img {
     width: 100%;
   }
