@@ -1,22 +1,22 @@
 <template>
-    <div class="title-canvas">
-        <span v-bind:class="{'title__next-project--hidden': position !== 'footer'}" class="title__next-project">next project</span>
-        <canvas v-bind:class="{'home-project__title--bottom': position === 'footer'}" class="home-project__title"></canvas>
-        <div class="home-svgs__container container">
-            <svg v-for="(title, index) in titles"
-                 :key="index"
-                 class="home-svgs__project-title"
-                 width="100%" height="100%"
-                 :viewBox="title.svgTitleVB"
-                 preserveAspectRatio="xMidYMid meet">
-                    <path class="project" :d="title.svgTitlePath" />
-            </svg>
-            <svg class="morph-shape" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
-                <path id="shape" style="fill: #000" />
-            </svg>
-        </div>
-
+  <div class="title-canvas">
+    <span v-bind:class="{'title__next-project--hidden': position !== 'footer'}" class="title__next-project">next project</span>
+    <canvas v-bind:class="{'home-project__title--bottom': position === 'footer'}" class="home-project__title"></canvas>
+    <div class="home-svgs__container container">
+      <svg v-for="(title, index) in titles"
+            :key="index"
+            class="home-svgs__project-title"
+            width="100%" height="100%"
+            :viewBox="title.svgTitleVB"
+            preserveAspectRatio="xMidYMid meet">
+            <path class="project" :d="title.svgTitlePath" />
+      </svg>
+      <svg class="morph-shape" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+        <path id="shape" style="fill: #000" />
+      </svg>
     </div>
+
+  </div>
 </template>
 
 <style lang="scss">
@@ -234,7 +234,7 @@
         // get width and height of morphed svg
         this.svgWidth = document.querySelector('#shape').getBoundingClientRect().width
         this.svgHeight = Math.floor(document.querySelector('#shape').getBoundingClientRect().height);
-        this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
+        this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width * 2, this.mainCanvas.el.height * 2);
 
         // first part of the title animation on click
         if (this.pageTransition.isComplete === false) {
@@ -400,13 +400,14 @@
             this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
           }
         }
+        console.log(this.position);
         for (let j = 0; j < duplicates; j++) {
           const ratioX = this.sizes[j];
           let ratioY
           if (this.position === 'footer'){
             ratioY = this.mainCanvas.el.height / this.pixelRatio - ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) * 2 / 3) - (j * this.verticalIncrement);
           } else {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY / 2) - (j * this.verticalIncrement);
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (j * this.verticalIncrement);
           }
           this.title.minY = this.ratioY + (this.canvasRatio * this.verticalIncrement);
           this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
@@ -461,10 +462,11 @@
           this.mainCanvas.ctx.strokeWidth = 2;
           this.drawSvg(this.states[j], ratioX, ratioY);
           // calculate alpha of duplicata
-          const fillStroke = this.tick > 0 ? j * 0.7 / this.tick : j / 1;
+          const fillStroke = this.tick > 0 ? j + 1 * 0.7 / this.tick : j + 1 / 1;
           this.strokeFillClosePath(fillStroke);
           // if it is the last duplicata, set the vertical offset and set isComplete to get back to the first state
           if (duplicates === 1){
+            console.log(fillStroke);
             // this.canvasRatio = this.pageTransition.totalDuplications;
             //mainCanvas.ctx.translate(0, -pageTransition.totalDuplications*verticalIncrement);
             this.pageTransition.isComplete = undefined;
@@ -665,10 +667,9 @@
         let svgVertical;
         if (this.position === 'center'){
           svgVertical = ((this.morphingSVG.visibleHeight +  this.morphingSVG.visibleY) / 3 * 2);
-          this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2) - svgVertical) / this.verticalIncrement);
+          this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
         } else {
-          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
-          
+          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);          
           this.pageTransition.totalDuplications = Math.floor((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
         }
       },
@@ -698,7 +699,7 @@
           this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width, this.mainCanvas.el.height);
           if (this.position === 'header') {
             this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - this.verticalIncrement - this.morphingSVG.visibleY) / (this.verticalIncrement));
-            this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
+            this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width, this.mainCanvas.height);
             this.mainCanvas.ctx.translate(0, -this.verticalIncrement*this.pageTransition.totalDuplications);
           }
           if (this.position === 'footer') {
