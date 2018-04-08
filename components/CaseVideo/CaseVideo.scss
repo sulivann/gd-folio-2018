@@ -2,7 +2,7 @@
   @include container-wide;
   opacity: 0;
   position: relative;
-
+  transition: opacity 0.3s ease-in;
   video {
     width: 100%;
   }

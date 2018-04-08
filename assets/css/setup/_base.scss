@@ -30,3 +30,7 @@ h2 {
 p {
   @include as-p;
 }
+
+.js--already-animated{
+  opacity: 1 !important;
+}

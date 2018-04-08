@@ -1,6 +1,7 @@
 .case-text {
   @include container-wide;
   margin-bottom: $space-xx-large;
+  transition: opacity 0.3s ease-in;
   opacity: 0;
   display: flex;
 

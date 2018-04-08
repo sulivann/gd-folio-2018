@@ -1,22 +1,23 @@
 <template>
-    <div class="title-canvas">
-        <span v-bind:class="{'title__next-project--hidden': position !== 'footer'}" class="title__next-project">next project</span>
-        <canvas v-bind:class="{'home-project__title--bottom': position === 'footer'}" class="home-project__title"></canvas>
-        <div class="home-svgs__container container">
-            <svg v-for="(title, index) in titles"
-                 :key="index"
-                 class="home-svgs__project-title"
-                 width="100%" height="100%"
-                 :viewBox="title.svgTitleVB"
-                 preserveAspectRatio="xMidYMid meet">
-                    <path class="project" :d="title.svgTitlePath" />
-            </svg>
-            <svg class="morph-shape" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
-                <path id="shape" style="fill: #000" />
-            </svg>
-        </div>
-
+  <div class="title-canvas">
+    <span v-bind:class="{'title__next-project--hidden': position !== 'footer'}" class="title__next-project">next project</span>
+    <button class="back-home">back home</button>
+    <canvas v-bind:class="{'home-project__title--bottom': position === 'footer'}" class="home-project__title"></canvas>
+    <div class="home-svgs__container container">
+      <svg v-for="(title, index) in titles"
+            :key="index"
+            class="home-svgs__project-title"
+            width="100%" height="100%"
+            :viewBox="title.svgTitleVB"
+            preserveAspectRatio="xMidYMid meet">
+            <path class="project" :d="title.svgTitlePath" />
+      </svg>
+      <svg class="morph-shape" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+        <path id="shape" style="fill: #000" />
+      </svg>
     </div>
+
+  </div>
 </template>
 
 <style lang="scss">
@@ -142,13 +143,14 @@
           this.$parent.$on('mousemove', this.checkTitleHover)
         }
       },
-      projectIndex: function(val) {
-        this.titleIndex = val;
+      projectIndex: function(val) {        
+        this.titleIndex = val === undefined ? this.$store.getters.activeIndex : val;
         this.setShape();
       }
     },
     methods: {
       init() {
+        this.backhomebt = this.$el.querySelector('.back-home');
         // initialize canvas
         this.pixelRatio = this.$store.getters.pixelRatio;
         this.mainCanvas.el = document.createElement('canvas');
@@ -169,6 +171,7 @@
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
             if (this.$route.name === 'index') {
+              console.log('wowowo');
               this.maxLength = 0;
               this.tick = 0;
               this.states.length = 0;
@@ -216,6 +219,7 @@
       },
 
       setEventListeners() {
+        this.backhomebt.addEventListener('click', this.backhome);
         window.addEventListener('resize', this.resize);
         if(this.position === 'footer') {
           document.addEventListener('click', this.clickEvent);
@@ -234,7 +238,7 @@
         // get width and height of morphed svg
         this.svgWidth = document.querySelector('#shape').getBoundingClientRect().width
         this.svgHeight = Math.floor(document.querySelector('#shape').getBoundingClientRect().height);
-        this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
+        this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width * 2, this.mainCanvas.el.height * 2);
 
         // first part of the title animation on click
         if (this.pageTransition.isComplete === false) {
@@ -387,6 +391,68 @@
         this.tick--;
       },
 
+      pageBackHomeTransitionStart(data) {
+        const duplicates = Math.trunc(Math.ceil(this.backHomeTransition.duplications));
+        if (this.tick === 0) {
+          for (let i = 0; i < this.backHomeTransition.totalDuplications; i++){
+            this.states[i] = this.toBezier(data);
+            this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
+          }
+        }
+        for (let j = 0; j < duplicates; j++) {
+          const ratioX = this.sizes[j];
+          let ratioY = -this.morphingSVG.visibleHeight / 3 - this.morphingSVG.visibleY + (j * this.verticalIncrement);
+          if (ratioY >= this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - this.morphingSVG.visibleY) {
+            ratioY =  this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - this.morphingSVG.visibleY;
+          }
+          this.mainCanvas.ctx.beginPath();
+          this.drawSvg(this.states[j], ratioX, ratioY);
+          const fillStroke = 1;
+          this.strokeFillClosePath(fillStroke);
+          if(duplicates === this.backHomeTransition.totalDuplications && j === duplicates - 1){            
+            this.backHomeTriggerEnd(this.tick);
+            return;
+          }
+        }
+        this.tick ++;
+      },
+
+      pageBackHomeTransitionEnd(data) {
+        const duplicates = Math.trunc(Math.ceil(this.backHomeTransition.duplications)) === 0 ? 1 : Math.trunc(Math.ceil(this.backHomeTransition.duplications));
+        if (this.maxLength === 0) {
+          this.maxLength = duplicates - 1;
+          this.tick = Math.trunc(this.tick / 2) + (Math.trunc(this.tick / 2) % 2);
+          this.displayedDuplicatas = this.sizes.length;
+        }
+        let hasReachedCenter = false;
+        for (let j = 0; j < duplicates; j++ ) {
+          const ratioX = this.sizes[j + this.sizes.length - duplicates];
+          let ratioY = -this.morphingSVG.visibleHeight / 3 - this.morphingSVG.visibleY + (j + this.sizes.length - duplicates) * this.verticalIncrement;
+          if (ratioY >= this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - this.morphingSVG.visibleY) {
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - this.morphingSVG.visibleY;
+            if (hasReachedCenter && j !== 1) {
+              continue;
+            } else {
+              hasReachedCenter = true;
+            }
+          }
+          this.mainCanvas.ctx.beginPath();
+          this.mainCanvas.ctx.strokeWidth = 2;
+          this.drawSvg(this.states[j], ratioX, ratioY);
+          const fillStroke = this.tick > 0 ? j + 1 * 0.7 / this.tick : j + 1 / 1;
+          this.strokeFillClosePath(fillStroke);
+          // if it is the last duplicata, set the vertical offset and set isComplete to get back to the first state
+          if (duplicates === 1){
+            this.sizes.length = 0;
+            this.states.length = 0;
+            this.position = 'center';
+            this.setTransitionDuplications();
+            this.backHomeTransition.isComplete = undefined;
+            return;
+          }
+        }
+      },
+
       /*
       * Draw the first part of the page transition animation
       * The title duplicates following the Bezier curve incrementation of the number x
@@ -406,12 +472,10 @@
           if (this.position === 'footer'){
             ratioY = this.mainCanvas.el.height / this.pixelRatio - ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) * 2 / 3) - (j * this.verticalIncrement);
           } else {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY / 2) - (j * this.verticalIncrement);
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (j * this.verticalIncrement);
           }
-          this.title.minY = this.ratioY + (this.canvasRatio * this.verticalIncrement);
-          this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
           if (ratioY <=  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY))) {
-              ratioY =  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
+            ratioY =  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
           }
           this.mainCanvas.ctx.beginPath();
           this.mainCanvas.ctx.strokeWidth = 2;
@@ -461,7 +525,7 @@
           this.mainCanvas.ctx.strokeWidth = 2;
           this.drawSvg(this.states[j], ratioX, ratioY);
           // calculate alpha of duplicata
-          const fillStroke = this.tick > 0 ? j * 0.7 / this.tick : j / 1;
+          const fillStroke = this.tick > 0 ? j + 1 * 0.7 / this.tick : j + 1 / 1;
           this.strokeFillClosePath(fillStroke);
           // if it is the last duplicata, set the vertical offset and set isComplete to get back to the first state
           if (duplicates === 1){
@@ -479,25 +543,6 @@
         }
         this.displayedDuplicatas = this.displayedDuplicatas > 2 ? Math.trunc(this.displayedDuplicatas * 0.9) : this.displayedDuplicatas--;
         this.tick--;
-      },
-
-      easeSlideProjectAnimation(totalTicks) {
-        this.titleAnimation.isComplete = true;
-        this.titleAnimation.totalDuplications = totalTicks;
-        TweenMax.to(this.titleAnimation, 0.6, {
-          duplications: 1,
-          ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
-        });
-      },
-
-      easeTransitionAnimation(totalTicks) {
-        this.pageTransition.initialIncrement = totalTicks;
-        this.pageTransition.isComplete = true;
-        TweenMax
-        .to(this.pageTransition, 0.6, {
-          duplications: 1,
-          ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
-        });
       },
 
       morphTitle() {
@@ -601,8 +646,6 @@
         document.body.style.cursor = 'default';
         this.title.alpha = 1;
         if (this.pageTransition.isComplete === undefined) {
-          //
-          // const displacementRatio = this.position === 'footer' ? 1 : 2;
           this.maxLength = 0;
           this.tick = 0;
           this.states.length = 0;
@@ -628,9 +671,57 @@
           }, 50);
         }
         setTimeout(() => {
-          this.updateActiveProject();
           this.routeToProject();
         }, 1500);
+      },
+
+      backhome() {
+        this.backHomeTransition.isComplete = false;
+        this.maxLength = 0;
+        this.tick = 0;
+        this.states.length = 0;
+        this.sizes.length = 0;
+        this.backHomeTransition.duplications = 0;
+        this.tl
+        .to(document.querySelector('.work'), 0.3, {
+          opacity: 0,
+          delay: 0.1,
+        })
+        TweenMax
+        .to(this.backHomeTransition, 0.6, {
+          duplications: this.backHomeTransition.totalDuplications,
+          ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
+        });
+        setTimeout(() => {
+          this.routeToHome();
+        }, 1500);
+      },
+
+      backHomeTriggerEnd(totalTicks) {
+        this.backHomeTransition.isComplete = true;
+        TweenMax.to(this.backHomeTransition, 0.6, {
+          duplications: 1,
+          ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
+        });
+      },
+
+      easeSlideProjectAnimation(totalTicks) {
+        this.titleAnimation.isComplete = true;
+        this.titleAnimation.totalDuplications = totalTicks;
+        TweenMax.to(this.titleAnimation, 0.6, {
+          duplications: 1,
+          ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
+        });
+      },
+
+      easeTransitionAnimation(totalTicks) {
+        this.pageTransition.initialIncrement = totalTicks;
+        this.pageTransition.isComplete = true;
+        TweenMax
+        .to(this.pageTransition, 0.6, {
+          duplications: 1,
+          ease: CustomEase.create("custom", "0.77, 0, 0.175, 1"),
+        });
       },
 
       routeToProject() {
@@ -640,6 +731,10 @@
           const value = this.setIndex(this.projectIndex);
           this.$store.dispatch('setActiveIndex', value);
         }
+      },
+
+      routeToHome() {
+        this.$router.push(`/`);
       },
 
       defineResponsiveRatio() {
@@ -665,12 +760,13 @@
         let svgVertical;
         if (this.position === 'center'){
           svgVertical = ((this.morphingSVG.visibleHeight +  this.morphingSVG.visibleY) / 3 * 2);
-          this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2) - svgVertical) / this.verticalIncrement);
+          this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
+          console.log(this.pageTransition.totalDuplications);
         } else {
-          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
-          
+          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);          
           this.pageTransition.totalDuplications = Math.floor((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
         }
+        this.backHomeTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
       },
       /*
       * The main animation
@@ -698,7 +794,7 @@
           this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width, this.mainCanvas.el.height);
           if (this.position === 'header') {
             this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - this.verticalIncrement - this.morphingSVG.visibleY) / (this.verticalIncrement));
-            this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
+            this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width, this.mainCanvas.height);
             this.mainCanvas.ctx.translate(0, -this.verticalIncrement*this.pageTransition.totalDuplications);
           }
           if (this.position === 'footer') {
@@ -712,8 +808,6 @@
       },
       cancelEventListeners() {
         document.removeEventListener('click', this.clickEvent);
-      },
-      updateActiveProject() {
       },
       setIndex(index) {
         if (index > this.titles.length - 1) {

@@ -19,10 +19,11 @@
         if (((el.getBoundingClientRect().top - window.innerHeight) < -130) && !el.classList.contains('js--already-animated')) {
           // Add new class on waypoint
           el.classList.add('js--already-animated');
-          TweenMax.to(el, 0.7, {
-            opacity: 1,
-            ease: Sine.easeOut
-          });
+          // TweenMax.to(el, 0.2, {
+          //   opacity: 1,
+          //   y: '-=1',
+          //   ease: Sine.easeOut
+          // });
         }
       }
     }
