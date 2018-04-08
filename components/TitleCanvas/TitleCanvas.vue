@@ -123,6 +123,21 @@
         if (mutation.type === 'TRIGGER_CLICK_EVENT') {
           this.transitionToProject();
         }
+        if (mutation.type === 'TRIGGER_BACK_TO_CENTER_EVENT') {
+          const scrollbars = Scrollbar.getAll();
+          const titleCanvas = document.querySelector('.title-canvas');
+
+          titleCanvas.style.top = 0;
+          titleCanvas.style.bottom = 'auto';
+
+          this.position = 'header';
+
+          if (scrollbars.length > 0) {
+            scrollbars[0].scrollTo(0, 0, 700, {
+              callback: this.backhome,
+            });
+          }
+        }
       });
     },
     mounted() {
@@ -143,7 +158,7 @@
           this.$parent.$on('mousemove', this.checkTitleHover)
         }
       },
-      projectIndex: function(val) {        
+      projectIndex: function(val) {
         this.titleIndex = val === undefined ? this.$store.getters.activeIndex : val;
         this.setShape();
       }
@@ -281,13 +296,13 @@
         if (this.titleAnimation.isComplete === true) {
           this.projectTransitionEnd(data);
           return
-        }        
+        }
       },
 
       /*
       * Draw the project title when no animation is going on
       */
-      drawStaticTitle() {        
+      drawStaticTitle() {
         const data = this.shape.getAttribute("d");
         // this.svgWidth = document.querySelector('#shape').getBoundingClientRect().width
         // this.svgHeight = Math.floor(document.querySelector('#shape').getBoundingClientRect().height);
@@ -409,7 +424,7 @@
           this.drawSvg(this.states[j], ratioX, ratioY);
           const fillStroke = 1;
           this.strokeFillClosePath(fillStroke);
-          if(duplicates === this.backHomeTransition.totalDuplications && j === duplicates - 1){            
+          if(duplicates === this.backHomeTransition.totalDuplications && j === duplicates - 1){
             this.backHomeTriggerEnd(this.tick);
             return;
           }
@@ -768,7 +783,7 @@
           svgVertical = ((this.morphingSVG.visibleHeight +  this.morphingSVG.visibleY) / 3 * 2);
           this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
         } else {
-          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);          
+          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
           this.pageTransition.totalDuplications = Math.floor((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
         }
         this.backHomeTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);

@@ -42,7 +42,8 @@ const createStore = () => {
         SET_PIXELRATIO (state, pixelRatio) {
           state.pixelRatio = pixelRatio;
         },
-        TRIGGER_CLICK_EVENT () {}
+        TRIGGER_CLICK_EVENT () {},
+        TRIGGER_BACK_TO_CENTER_EVENT () {}
       },
     actions: {
       setActiveIndex ({ commit }, activeIndex) {
@@ -60,8 +61,11 @@ const createStore = () => {
       setpixelRatio ({ commit }, pixelRatio) {
         commit('SET_PIXELRATIO', pixelRatio);
       },
-      triggerClickEvent ({ commit }) {
-        commit('TRIGGER_CLICK_EVENT');
+      triggerTransitionEvent ({ commit }) {
+        commit('TRIGGER_TRANSITION_EVENT');
+      },
+      triggerBackToCenter ({ commit }) {
+        commit('TRIGGER_BACK_TO_CENTER_EVENT');
       }
     }
     })

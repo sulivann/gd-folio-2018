@@ -61,6 +61,20 @@ import CaseVideo from '~/components/CaseVideo/CaseVideo.vue';
 import CaseTitle from '~/components/CaseTitle/CaseTitle.vue';
 
 export default {
+  transition: {
+    mode: 'out-in',
+    css: false,
+    leave (el, done) {
+      if (this.$route.name === 'index') {
+        this.$store.dispatch('triggerBackToCenter');
+        setTimeout(() => {
+          done();
+        }, 800);
+      } else {
+        done();
+      }
+    }
+  },
   validate({ params }) {
     if (data.data[params.slug] === undefined) {
       return false

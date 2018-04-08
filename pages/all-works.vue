@@ -196,7 +196,7 @@ export default {
     },
     handleClick() {
       const slug = Object.values(this.data)[this.activeIndex].slug;
-      this.$store.dispatch('triggerClickEvent');
+      this.$store.dispatch('triggerTransitionEvent');
     },
     triggerAnimation(index) {
       let banner = Object.values(this.data)[index].banner.src;
