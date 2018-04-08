@@ -6,10 +6,11 @@
       <div class="all-works__separator"></div>
     </div>
     <div class="all-works__case-numbers">
-      <div class="all-works__case-number">01</div>
-      <div class="all-works__case-number">02</div>
-      <div class="all-works__case-number">03</div>
-      <div class="all-works__case-number">04</div>
+      <div
+        v-for="(n, index) in count"
+        v-bind:class="[activeIndex === index ? 'all-works__case-number--active': '']"
+        :key="index"
+        class="all-works__case-number">0{{index+1}}</div>
     </div>
     <div class="all-works__triggers">
       <div
@@ -33,11 +34,12 @@
   }
 
   .all-works__separator {
-    height: 100%;
+    height: 0%;
     width: 1px;
     background-color: white;
     opacity: 0.1;
     position: absolute;
+    bottom: 0;
   }
 
   .all-works__separator:nth-child(1) {
@@ -52,11 +54,22 @@
     left: 75%;
   }
 
+  .all-works__case-numbers {
+    opacity: 0;
+  }
+
   .all-works__case-number {
     position: absolute;
     bottom: $space-x-large;
     transform: translateX(-50%);
     font-family: $font-family-heading;
+    opacity: 0.6;
+  }
+
+  .all-works__case-number--active {
+    opacity: 1;
+    transition: opacity 0.7s ease-out;
+    text-decoration: underline;
   }
 
   .all-works__case-number:nth-child(1) {
@@ -79,11 +92,18 @@
     background-image: url('~/static/img/badass/mock_up_01.png');
     background-size: cover;
     background-position: 0% center;
-    width: 20%;
+    height: 100vh;
+    width: 100vw;
+    transform: translateX(25%);
+  }
+
+  .all-works__background {
+    width: 25%;
     height: 100vh;
     transform: translateX(-100%);
     position: relative;
     z-index: 1000;
+    overflow: hidden;
   }
 
   .all-works__triggers {
@@ -121,14 +141,23 @@ export default {
   },
   mounted() {
     this.background = document.querySelector('.all-works__backgroundImg');
+    this.backgroundContainer = document.querySelector('.all-works__background');
+    this.startEnterAnimation();
+
     document.addEventListener('mousemove', (e) => {
       this.handleMouseOver(e);
     });
-    this.interval = setInterval(this.handleIntervalFunction, 250);
+
+    setTimeout(() => {
+      this.interval = setInterval(this.handleIntervalFunction, 250);
+    }, 3500);
   },
   methods: {
     handleMouseOver(event) {
-      this.targeted = parseInt(event.target.dataset.index);
+      let index = event.target.dataset.index;
+      if (index !== undefined) {
+        this.targeted = parseInt(event.target.dataset.index);
+      }
     },
     handleIntervalFunction() {
       if (!this.alreadyAnimated && this.targeted !== this.activeIndex) {
@@ -137,9 +166,33 @@ export default {
         this.activeIndex = this.targeted;
         setTimeout(() => {
           TweenMax.set(this.background, { clearProps:"all" });
+          TweenMax.set(this.backgroundContainer, { clearProps:"all" });
           this.alreadyAnimated = false;
-        }, 1500);
+        }, 420);
       }
+    },
+    startEnterAnimation() {
+      let tl = new TimelineMax();
+      const separators = document.querySelectorAll('.all-works__separator');
+      const numbers = document.querySelectorAll('.all-works__case-numbers');
+
+      tl.delay(1.5);
+
+      tl.add('first-step');
+      tl.add('second-step');
+
+      tl.to(separators, 1.5, {
+        height: '100%',
+        ease: Expo.easeOut,
+      }, 'first-step');
+
+      tl.to(numbers, 0.7, {
+        opacity: 1,
+        ease: Expo.easeOut,
+        delay: 0.5,
+      }, 'second-step');
+
+      tl.set({}, {}, 2);
     },
     handleClick() {
       const slug = Object.values(this.data)[this.activeIndex].slug;
@@ -147,17 +200,23 @@ export default {
     },
     triggerAnimation(index) {
       let banner = Object.values(this.data)[index].banner.src;
-      this.background.style.backgroundImage = `url('./img/${banner}')`
-      this.tween = TweenMax.to(this.background, 0.4, {
-        backgroundPosition: "100% center",
-        x: "500%",
+      this.background.style.backgroundImage = `url('./img/${banner}')`;
+
+      this.tween = TweenMax.to(this.backgroundContainer, 0.4, {
+        x: "400%",
         force3D: true,
-        ease: CustomEase.create('custom", "0.86, 0, 0.07, 1')
+        // ease: CustomEase.create('custom", "1, 0, 0, 1')
+      });
+
+      this.tween = TweenMax.to(this.background, 0.4, {
+        x: "-100%",
+        force3D: true,
+        // ease: CustomEase.create('custom", "1, 0, 0, 1')
       });
 
       setTimeout(() => {
         this.$store.dispatch('setActiveIndex', index);
-      }, 150);
+      }, 100);
     }
   },
 };
