@@ -86,7 +86,7 @@
           maxX: undefined,
           minY: undefined,
           maxY: undefined,
-          alpha: 0.7,
+          alpha: this.position === 'header' ? 1 : 0.7,
         },
         pageTransition: {
           isComplete: undefined,
@@ -150,6 +150,7 @@
     watch: {
       canvasPos: function(val) {
         this.position = val;
+        this.title.alpha = this.position === 'header' ? 1 : 0.7;
         this.cancelEventListeners();
         this.setEventListeners();
         this.setTransitionDuplications();
@@ -217,9 +218,7 @@
         this.setDisplay();
         this.setTransitionDuplications();
         if (this.position === 'footer') {
-          // this.pageTransition.totalDuplications = Math.trunc((this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2 * 0.30) - ((this.maxRatio + 1) * this.verticalIncrement) - this.morphingSVG.visibleY) / (this.verticalIncrement));
           this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
-          // this.mainCanvas.ctx.translate(0, this.verticalIncrement * this.pageTransition.totalDuplications);
           this.shape.setAttribute('d', this.titles[this.titleIndex].svgTitlePath);
           this.morphingSVG.el.setAttribute('viewBox', this.titles[this.titleIndex].svgTitleVB);
         }
@@ -319,7 +318,7 @@
         this.title.minX = ratioX;
         this.title.maxX = this.title.minX + this.morphingSVG.visibleWidth;
         this.title.minY = this.position === 'footer' ? ratioY : ratioY + (this.canvasRatio * this.verticalIncrement);
-        this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight;
+        this.title.maxY = this.title.minY + this.morphingSVG.visibleHeight + this.morphingSVG.visibleY;
         this.mainCanvas.ctx.beginPath();
         this.mainCanvas.ctx.strokeWidth = 2;
         const bezierpoints = this.toBezier(data);
@@ -474,21 +473,21 @@
       *
       */
       pageTransitionStart(data) {
-        const duplicates = Math.trunc(Math.ceil(this.pageTransition.duplications));
-        if (duplicates === 0) {
+        const duplicates = Math.ceil(this.pageTransition.duplications);
+        if (this.tick === 0) {
           for (let i = 0; i < this.pageTransition.totalDuplications; i++){
             this.states[i] = this.toBezier(data);
             this.sizes[i] = ((this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / (this.morphingSVG.visibleWidth)) / 2 - this.morphingSVG.visibleX);
           }
         }
         let hasReachedTop = false;
-        for (let j = 0; j < duplicates; j++) {
+        for (let j = 0; j <= duplicates; j++) {
           const ratioX = this.sizes[j];
           let ratioY
           if (this.position === 'footer'){
             ratioY = this.mainCanvas.el.height / this.pixelRatio - ((this.morphingSVG.visibleHeight) * 2 / 3) + this.morphingSVG.visibleY - (j * this.verticalIncrement);
           } else {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - this.morphingSVG.visibleY - (j * this.verticalIncrement);
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (this.morphingSVG.visibleY) - (j * this.verticalIncrement);
           }
           if (ratioY <=  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY))) {
             if (hasReachedTop && duplicates !== this.pageTransition.totalDuplications) {
@@ -501,8 +500,7 @@
           this.mainCanvas.ctx.beginPath();
           this.mainCanvas.ctx.strokeWidth = 2;
           this.drawSvg(this.states[j], ratioX, ratioY);
-
-          const fillStroke = 1;
+          const fillStroke = (j + 1) / (duplicates + 1);
           this.strokeFillClosePath(fillStroke);
           if(duplicates === this.pageTransition.totalDuplications && j === duplicates - 1){
             this.easeTransitionAnimation(this.tick);
@@ -518,7 +516,7 @@
       *
       */
       pageTransitionEnd(data) {
-        const duplicates = Math.trunc(Math.ceil(this.pageTransition.duplications)) === 0 ? 1 : Math.trunc(Math.ceil(this.pageTransition.duplications));
+        const duplicates = Math.ceil(this.pageTransition.duplications);
         if (this.maxLength === 0) {
           this.maxLength = duplicates - 1;
           this.tick = Math.trunc(this.tick / 2) + (Math.trunc(this.tick / 2) % 2);
@@ -529,9 +527,11 @@
           const ratioX = this.sizes[j + this.sizes.length - duplicates];
           let ratioY;
           if (this.position === 'footer') {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY * 2 / 3) - (j + this.sizes.length - duplicates) * this.verticalIncrement;
+            ratioY = this.mainCanvas.el.height / this.pixelRatio - (this.morphingSVG.visibleHeight * 2 / 3) - this.morphingSVG.visibleY - (j + this.sizes.length - duplicates) * this.verticalIncrement;
           } else {
-            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY / 2) - (j + this.sizes.length - duplicates) * this.verticalIncrement;
+            ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (this.morphingSVG.visibleHeight / 6 + this.morphingSVG.visibleY) - (j + this.sizes.length - duplicates) * this.verticalIncrement;
+            // ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - (this.morphingSVG.visibleHeight / 6 + this.morphingSVG.visibleY) - (j * this.verticalIncrement);
+
           }
 
           if (ratioY <=  -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY))) {
@@ -546,7 +546,7 @@
           this.mainCanvas.ctx.strokeWidth = 2;
           this.drawSvg(this.states[j], ratioX, ratioY);
           // calculate alpha of duplicata
-          const fillStroke = this.tick > 0 ? j + 1 * 0.7 / this.tick : j + 1 / 1;
+          const fillStroke = (j + 1) / duplicates;
           this.strokeFillClosePath(fillStroke);
           // if it is the last duplicata, set the vertical offset and set isComplete to get back to the first state
           if (duplicates === 1){
@@ -777,13 +777,13 @@
         // (this.mainCanvas.el.height / this.pixelRatio - morphSvgVisibleVertical) / this.verticalIncrement
         let svgVertical;
         if (this.position === 'center'){
-          svgVertical = ((this.morphingSVG.visibleHeight +  this.morphingSVG.visibleY) / 3 * 2);
-          this.pageTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
+          svgVertical = (this.morphingSVG.visibleHeight) / 6 + this.morphingSVG.visibleY;
+          this.pageTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio / 2) - svgVertical) / this.verticalIncrement);
         } else {
-          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
-          this.pageTransition.totalDuplications = Math.floor((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
+          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);          
+          this.pageTransition.totalDuplications = Math.ceil((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
         }
-        this.backHomeTransition.totalDuplications = Math.floor(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
+        this.backHomeTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);
       },
       /*
       * The main animation
