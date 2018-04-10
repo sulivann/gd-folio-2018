@@ -7,8 +7,16 @@
       <home-subtitle :role="data.role" />
     </main>
 </template>
-<script>
 
+<style lang="scss">
+  .home {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+</style>
+
+<script>
 // Data
 import data from '~/static/data.json';
 

@@ -1,5 +1,11 @@
 <template>
-    <div class="project-subtitle">{{ projectSubtitleContent }}</div>
+    <div
+      v-if="this.$store.getters.homeBeenHovered"
+      class="project-subtitle">Click to discover</div>
+    <div
+      v-else
+      class="project-subtitle">
+      {{ projectSubtitleContent }} </div>
 </template>
 
 <style lang="scss">
@@ -23,37 +29,36 @@ import { TweenMax, Power2 } from 'gsap';
     mounted() {
       this.init();
     },
-    watch: { role: 'subtitleUpdate' },
+    watch: {
+      role: 'subtitleUpdate'
+    },
     methods: {
       init() {
         this.projectSubtitle = document.querySelector('.project-subtitle');
         this.projectSubtitleContent = this.role;
-        if (this.$store.getters.mobileLayout || this.$store.getters.homeBeenHovered) this.subtitleFadeIn();
-        if (this.$store.getters.homeBeenHovered){          
-          this.subtitleFadeIn();
-        }
+
+        this.subtitleFadeIn();
+
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX' && this.$store.state.homeBeenHovered === true) {
             this.subtitleUpdate();
           }
-          if (mutation.type === 'SET_HOMEHOVER') {
-            this.subtitleFadeIn();
-          }
-          if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === true) {
-            this.subtitleFadeIn();
-          } else if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === false && !state.homeBeenHovered) {
-            this.subtitleFadeOut();
-          }
-        })
+
+          // if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === true) {
+          //   this.subtitleFadeIn();
+
+          // } else if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === false && !state.homeBeenHovered) {
+          //   this.subtitleFadeOut();
+          // }
+        });
       },
 
       subtitleUpdate() {
-          this.subtitleFadeOut();
-          if (this.$store.getters.homeBeenHovered){
-            setTimeout(() => {
-              this.subtitleFadeIn();
-              }, 700);
-          }
+        this.subtitleFadeOut();
+
+        setTimeout(() => {
+          this.subtitleFadeIn();
+        }, 700);
       },
 
       subtitleFadeIn() {
