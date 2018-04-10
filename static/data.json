@@ -15,6 +15,7 @@
       "home_img": "badass/home.jpg",
       "banner": {
         "src": "badass/banner_badass.png",
+        "light": "badass/banner_badass_light.png",
         "logoSrc": "badass/badass.svg"
       },
       "homeSvg": {
@@ -76,6 +77,7 @@
       "home_img": "oeildeep/home.jpg",
       "banner": {
         "src": "oeildeep/banner_oeildeep.jpg",
+        "light": "oeildeep/banner_oeildeep_light.png",
         "logoSrc": "oeildeep/oeildeep.svg"
       },
       "elements": [
@@ -120,6 +122,7 @@
       "home_img": "vitality/home.jpg",
       "banner": {
         "src": "vitality/banner_vitality.jpg",
+        "light": "vitality/banner_vitality_light.png",
         "logoSrc": "vitality/vitality.svg"
       },
       "elements": [
@@ -168,6 +171,7 @@
       "home_img": "tesla/home.jpg",
       "banner": {
         "src": "tesla/banner_tesla.jpg",
+        "light": "tesla/banner_tesla_light.png",
         "logoSrc": "tesla/tesla.svg"
       },
       "elements": [

@@ -1,6 +1,5 @@
 <template>
-  <div class="case-banner">
-    <img class="case-banner__img" :src="`/img/${banner.src}`" />
+  <div class="case-banner" v-bind:style="{backgroundImage: `url(/img/${banner.light})`}">
   </div>
 </template>
 

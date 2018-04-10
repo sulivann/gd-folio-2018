@@ -1,10 +1,23 @@
 <template>
   <div class="home-images">
     <div class="home-project__images-container">
-      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
-      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
-      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
-      <img class="home-project__image" :src="`/img/${projectImgSource}`" alt="">
+      <img
+        class="home-project__image home-project__image--base"
+        :src="`/img/${projectImgSource}`"
+        v-on:mouseover="handleMouseOver"
+        v-on:mouseout="handleMouseOut">
+      <img
+        v-bind:class="{ 'home-project__image--active': mouseOver }"
+        class="home-project__image"
+        :src="`/img/${projectImgSource}`">
+      <img
+        v-bind:class="{ 'home-project__image--active': mouseOver }"
+        class="home-project__image"
+        :src="`/img/${projectImgSource}`">
+      <img
+        v-bind:class="{ 'home-project__image--active': mouseOver }"
+        class="home-project__image"
+        :src="`/img/${projectImgSource}`">
     </div>
   </div>
 </template>
@@ -26,7 +39,9 @@ import { TweenMax, Power2 } from 'gsap';
       return {
         projectImages: '',
         projectImgSource: '',
+        transitioning: false,
         tl: new TimelineMax(),
+        mouseOver: false,
       }
     },
     components: {
@@ -40,45 +55,52 @@ import { TweenMax, Power2 } from 'gsap';
     methods: {
       init() {
         this.projectImages = document.querySelectorAll('.home-project__image');
+        this.projectImage = document.querySelectorAll('.home-project__image--base');
         this.projectImgSource = this.img;
+
+        this.imgFadeIn();
+
         if (this.$store.getters.homeBeenHovered || this.$store.getters.mobileLayout) this.imgFadeIn();
         let suscribe = this.$store.subscribe((mutation, state) => {
           if (mutation.type === 'SET_ACTIVEINDEX') {
             this.imgUpdate();
           }
-          if (mutation.type === 'SET_HOMEHOVER') {
-            this.imgFadeIn();
-          }
-          if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === true) {
-            this.imgFadeIn();
-          } else if (mutation.type === 'SET_MOBILELAYOUT' && state.mobileLayout === false && !state.homeBeenHovered) {
-            this.imgFadeOut();
-          }
         })
       },
       imgUpdate() {
-          this.imgFadeOut();
-          if(this.$store.getters.homeBeenHovered){
-            setTimeout(() => {
-              this.imgFadeIn();
-            }, 1000);
-          }
+        this.imgFadeOut();
+
+        setTimeout(() => {
+          this.imgFadeIn();
+          this.transitioning = false;
+        }, 1000);
       },
 
       imgFadeIn() {
-        TweenMax.staggerTo(this.projectImages, 0.2, {
-            opacity: 1,
-            ease: Power3.easeOut
+        TweenMax.to(this.projectImage, 0.2, {
+          opacity: 1,
+          ease: Power3.easeOut
         }, 0.05);
       },
 
       imgFadeOut() {
-        TweenMax.staggerTo(this.projectImages, 0.2, {
-            opacity: 0,
-            ease: Power3.easeOut,
-        }, 0.05,
-        this.updateImgsURL
-        );
+        let wasHovered = this.mouseOver;
+        this.mouseOver = false;
+        this.transitioning = true;
+
+        TweenMax.to(this.projectImage, 0.2, {
+          opacity: 0,
+          ease: Power3.easeOut,
+        });
+
+        setTimeout(() => {
+          this.updateImgsURL();
+
+          if (wasHovered){
+            this.mouseOver = true;
+            this.$store.dispatch('setHomeHover', true);
+          }
+        }, 800);
       },
 
       updateImgsURL() {
@@ -93,6 +115,18 @@ import { TweenMax, Power2 } from 'gsap';
           y: '-50%',
         }, 0.06);
       },
+
+      handleMouseOver() {
+        if (!this.transitioning) {
+          this.mouseOver = true;
+          this.$store.dispatch('setHomeHover', true);
+        }
+      },
+
+      handleMouseOut() {
+        this.mouseOver = false;
+        this.$store.dispatch('setHomeHover', false)
+      }
    },
 }
 </script>

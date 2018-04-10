@@ -1,15 +1,15 @@
 .project-subtitle{
-    position: absolute;
-    color: white;
-    pointer-events: none;
-    left: 50%;
-    bottom: 20vh;
-    transform: translate3d(-50%, -50%, 0);
-    text-transform: uppercase;
-    text-align: center;
-    letter-spacing: 1.3px;
-    opacity: 0;
-    @media screen and (max-width: 420px){
-      font-size: 14px;
-    }
+  font-family: $font-family-heading;
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  left: 50%;
+  bottom: 13%;
+  transform: translate3d(-50%, -50%, 0);
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0;
+
+  @media screen and (max-width: 420px){
+    font-size: 14px;
+  }
 }
