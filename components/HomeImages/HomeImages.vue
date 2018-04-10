@@ -5,7 +5,8 @@
         class="home-project__image home-project__image--base"
         :src="`/img/${projectImgSource}`"
         v-on:mouseover="handleMouseOver"
-        v-on:mouseout="handleMouseOut">
+        v-on:mouseout="handleMouseOut"
+        v-on:click="handleClick">
       <img
         v-bind:class="{ 'home-project__image--active': mouseOver }"
         class="home-project__image"
@@ -126,6 +127,10 @@ import { TweenMax, Power2 } from 'gsap';
       handleMouseOut() {
         this.mouseOver = false;
         this.$store.dispatch('setHomeHover', false)
+      },
+
+      handleClick() {
+        this.$store.dispatch('triggerClickToCaseEvent');
       }
    },
 }

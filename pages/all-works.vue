@@ -31,6 +31,7 @@
     position: relative;
     width: 100%;
     height: 100vh;
+    overflow: hidden;
   }
 
   .all-works__separator {
@@ -150,7 +151,7 @@ export default {
 
     setTimeout(() => {
       this.interval = setInterval(this.handleIntervalFunction, 250);
-    }, 3500);
+    }, 2000);
   },
   methods: {
     handleMouseOver(event) {
@@ -176,7 +177,7 @@ export default {
       const separators = document.querySelectorAll('.all-works__separator');
       const numbers = document.querySelectorAll('.all-works__case-numbers');
 
-      tl.delay(1.5);
+      tl.delay(0.3);
 
       tl.add('first-step');
       tl.add('second-step');

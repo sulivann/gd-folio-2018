@@ -12,13 +12,14 @@
 
 <script>
   import faceSrc from 'assets/img/face.png';
+  import faceLineSrc from 'assets/img/face_line.png';
 
   export default {
     data() {
       return {
         canvas: {
           height: 1000,
-          width: 333
+          width: 350
         },
         deltaY: 0
       }
@@ -35,7 +36,6 @@
       initCanvas() {
         this.faceImg = new Image();
         this.faceImg.onload = (e) => {
-          this.ctx.drawImage(this.faceImg, 0, this.canvas.height - this.faceImg.height);
           this.handleEventListeners();
         };
         this.faceImg.src = faceSrc;
@@ -52,8 +52,9 @@
         this.deltaY = Math.abs(e.deltaY);
       },
       duplicateFace() {
-        for (let i = 0; i <= (this.deltaY/2); i++) {
-          this.ctx.drawImage(this.faceImg, 0, (this.canvas.height - this.faceImg.height)-i*2);
+        console.log(this.deltaY);
+        for (let i = 0; i <= (this.deltaY/3); i++) {
+          this.ctx.drawImage(this.faceImg, 0, (this.canvas.height - this.faceImg.height)-i);
         }
       },
       render() {

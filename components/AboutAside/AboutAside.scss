@@ -1,22 +1,16 @@
 .about-aside {
-  position: absolute;
+  width: 95%;
+  left: 50%;
+  transform: translateX(-50%);
+  justify-content: space-between;
+  display: flex;
   top: 0;
-  left: 0;
-  right: 0;
-  margin-top: $space-large;
+  position: absolute;
+  margin-top: 3%;
 
-  nav {
-    width: 93%;
-    max-width: 1335px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  a {
-    text-transform: uppercase;
-    text-decoration: none;
+  &__link {
     font-size: $font-size-small;
-    letter-spacing: 2px;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-large;
   }
 }

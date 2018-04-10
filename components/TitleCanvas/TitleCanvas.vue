@@ -1,7 +1,7 @@
 <template>
   <div class="title-canvas">
     <span v-bind:class="{'title__next-project--hidden': position !== 'footer'}" class="title__next-project">next project</span>
-    <button class="back-home">back home</button>
+    <!-- <button class="back-home">back home</button> -->
     <canvas v-bind:class="{'home-project__title--bottom': position === 'footer'}" class="home-project__title"></canvas>
     <div class="home-svgs__container container">
       <svg v-for="(title, index) in titles"
@@ -138,6 +138,9 @@
             });
           }
         }
+        if (mutation.type === 'TRIGGER_CLICK_TO_CASE_EVENT') {
+          this.transitionToProject();
+        }
       });
     },
     mounted() {
@@ -233,7 +236,7 @@
       },
 
       setEventListeners() {
-        this.backhomebt.addEventListener('click', this.backhome);
+        // this.backhomebt.addEventListener('click', this.backhome);
         window.addEventListener('resize', this.resize);
         if(this.position === 'footer') {
           document.addEventListener('click', this.clickEvent);
@@ -745,6 +748,9 @@
       routeToProject() {
         this.$router.push(`/work/${this.titles[this.titleIndex].name}`);
 
+        // force opacity on footer
+        this.$el.querySelector('.title__next-project').style.opacity = 1;
+
         if (this.canvasPos === 'footer') {
           const value = this.setIndex(this.projectIndex);
           this.$store.dispatch('setActiveIndex', value);
@@ -780,7 +786,7 @@
           svgVertical = (this.morphingSVG.visibleHeight) / 6 + this.morphingSVG.visibleY;
           this.pageTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio / 2) - svgVertical) / this.verticalIncrement);
         } else {
-          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);          
+          svgVertical = ((this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3 * 2);
           this.pageTransition.totalDuplications = Math.ceil((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY) / 3)) / this.verticalIncrement);
         }
         this.backHomeTransition.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio / 2)) / this.verticalIncrement);

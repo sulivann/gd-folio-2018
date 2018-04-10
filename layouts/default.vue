@@ -3,6 +3,7 @@
     <div class="main" v-smooth-scroll>
       <!-- <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/> -->
       <title-canvas
+        v-show="$route.name !== 'about'"
         :titles="data.titles"
         :viewport="viewport"
         :canvasPos="canvasPos"

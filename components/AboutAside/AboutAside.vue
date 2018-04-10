@@ -1,9 +1,7 @@
 <template>
   <div class="about-aside">
-    <nav>
-      <a href="#">All work</a>
-      <a href="#">Close</a>
-    </nav>
+    <nuxt-link to="/all-works" class="about-aside__link">All works</nuxt-link>
+    <nuxt-link to="/" class="about-aside__link">Close</nuxt-link>
   </div>
 </template>
 

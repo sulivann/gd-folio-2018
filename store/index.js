@@ -43,7 +43,8 @@ const createStore = () => {
           state.pixelRatio = pixelRatio;
         },
         TRIGGER_TRANSITION_EVENT () {},
-        TRIGGER_BACK_TO_CENTER_EVENT () {}
+        TRIGGER_BACK_TO_CENTER_EVENT () {},
+        TRIGGER_CLICK_TO_CASE_EVENT () {}
       },
     actions: {
       setActiveIndex ({ commit }, activeIndex) {
@@ -66,6 +67,9 @@ const createStore = () => {
       },
       triggerBackToCenter ({ commit }) {
         commit('TRIGGER_BACK_TO_CENTER_EVENT');
+      },
+      triggerClickToCaseEvent ({ commit }) {
+        commit('TRIGGER_CLICK_TO_CASE_EVENT');
       }
     }
     })

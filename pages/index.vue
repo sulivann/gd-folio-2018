@@ -1,9 +1,10 @@
 <template>
     <main class="home">
-      <!-- <home-case /> -->
-      <!-- <title-canvas :titles="data.titles" :viewport="viewport" :position="position"/> -->
+      <div class="home__wrapper">
+        <home-nav />
+        <home-menu :projects="data.titles" />
+      </div>
       <home-images :img="data.home_img" :viewport="viewport" />
-      <home-menu :projects="data.titles" />
       <home-subtitle :role="data.role" />
     </main>
 </template>
@@ -12,7 +13,13 @@
   .home {
     width: 100%;
     height: 100vh;
-    position: relative;
+
+    &__wrapper {
+      width: 95%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
   }
 </style>
 
@@ -26,46 +33,44 @@ import { TimelineMax, TweenMax, Sine } from 'gsap';
 import HomeMenu from '~/components/HomeMenu/HomeMenu.vue';
 import HomeImages from '~/components/HomeImages/HomeImages.vue';
 import HomeSubtitle from '~/components/HomeSubtitle/HomeSubtitle.vue';
-import TitleCanvas from '~/components/TitleCanvas/TitleCanvas.vue';
+import HomeNav from '~/components/HomeNav/HomeNav.vue';
 
 export default {
   transition: {
     mode: 'out-in',
     css: false,
-    // leave (el, done) {
-    //   let tl = new TimelineMax({ onComplete: done });
-    //   const homeImages = document.querySelector('.home-images');
-    //   const homeMenu = document.querySelector('.home-menu');
-    //   const projectSubtitle = document.querySelector('.project-subtitle');
+    leave (el, done) {
+      let tl = new TimelineMax({ onComplete: done });
+      const homeImages = document.querySelector('.home-images');
+      const homeMenu = document.querySelector('.home-menu');
+      const projectSubtitle = document.querySelector('.project-subtitle');
 
-    //   tl.add('first-step');
+      tl.add('first-step');
 
-    //   tl.to(homeImages, 0.7, {
-    //     opacity: 0,
-    //     ease: Expo.easeOut
-    //   }, 'first-step');
+      tl.to(homeImages, 0.7, {
+        opacity: 0,
+        ease: Expo.easeOut
+      }, 'first-step');
 
-    //   tl.add('second-step');
+      tl.add('second-step');
 
-    //   tl.to(homeMenu, 0.7, {
-    //     opacity: 0,
-    //     ease: Expo.easeOut
-    //   }, 'second-step');
+      tl.to(homeMenu, 0.7, {
+        opacity: 0,
+        ease: Expo.easeOut
+      }, 'second-step');
 
-    //   tl.to(projectSubtitle, 0.7, {
-    //     opacity: 0,
-    //     ease: Expo.easeOut
-    //   }, 'second-step');
-
-    //   tl.set({}, {}, 2);
-    // }
+      tl.to(projectSubtitle, 0.7, {
+        opacity: 0,
+        ease: Expo.easeOut
+      }, 'second-step');
+    }
   },
 
   components: {
     HomeMenu,
     HomeImages,
     HomeSubtitle,
-    TitleCanvas,
+    HomeNav,
   },
 
   data() {

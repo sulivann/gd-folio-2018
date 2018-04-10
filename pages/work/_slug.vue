@@ -38,6 +38,7 @@
       margin-top: $space-x-large;
       margin-bottom: $space-x-large;
       margin-left: 45%;
+      opacity: 0;
     }
 
     &__element:last-child div {
@@ -110,9 +111,36 @@ export default {
   methods: {
     init() {
       // this.footerIndex = this.setIndex(this.$store.getters.activeIndex + 1);
+      this.startEnterAnimations();
       document.addEventListener('mousemove', (e) => {
         this.updateMousePosition(e);
       });
+    },
+    startEnterAnimations() {
+      let tl = new TimelineMax();
+
+      const caseBanner = document.querySelector('.case-banner');
+      const caseTitle = document.querySelector('.case-title');
+      const caseHeader = document.querySelector('.work__header');
+
+      tl.add('first-step');
+
+      tl.to(caseBanner, 0.7, {
+        opacity: 1,
+        ease: Expo.easeOut
+      }, 'first-step');
+
+      tl.add('second-step');
+
+      tl.to(caseTitle, 0.7, {
+        opacity: 1,
+        ease: Expo.easeOut
+      }, 'second-step');
+
+      tl.to(caseHeader, 0.7, {
+        opacity: 1,
+        ease: Expo.easeOut
+      }, 'second-step');
     },
     setIndex(index) {
       if (index > this.titles.length - 1) {
