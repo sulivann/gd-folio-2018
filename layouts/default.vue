@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="main" v-smooth-scroll>
-      <!-- <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/> -->
-      <title-canvas
-        v-show="$route.name !== 'about'"
+      <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/>
+      <title-canvas 
+        :visible="visible"
         :titles="data.titles"
         :viewport="viewport"
         :canvasPos="canvasPos"
@@ -25,8 +25,6 @@ export default {
     getIndex() {
       if (this.$route.name === 'work-slug'){
         return this.canvasPos === 'footer' ? this.setIndex(this.$store.getters.activeIndex + 1) : this.setIndex(this.$store.getters.activeIndex);
-      } else if (this.$route.name === 'all-works') {
-        return this.setIndex(this.$store.getters.activeIndex);
       }
     }
   },
@@ -54,9 +52,10 @@ export default {
         posX: '',
         posY: '',
       },
-      canvasPos: this.$route.name === 'work-slug' ? 'header' : 'center',
+      canvasPos: this.$route.name === 'work-slug' ? 'header' : this.$route.name === 'about' ? null : 'center',
       showLoader: true,
       showContent: false,
+      visible: false,
     }
   },
 
@@ -75,6 +74,7 @@ export default {
 
   methods: {
     init() {
+      console.log(this.$route.name);
       window.onNuxtReady((app) => {
         app.$nuxt.$on('routeChanged', (to, from) => {
           if (
@@ -83,16 +83,17 @@ export default {
           ){
             const titleCanvas = document.querySelector('.title-canvas');
             titleCanvas.style.top = 0;
-            titleCanvas.style.bottom = 'auto';
+            titleCanvas.style.bottom = 'auto';            
             this.canvasPos = 'header';
           }
         })
-      });
+      })
       this.resizeEvent = window.addEventListener('resize', this.checkMobileLayout);
       this.setMobileLayout();
       let subscribe = this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'SET_LOADERHIDDEN' && this.$store.state.loaderHidden === true) {
           this.showContent = true;
+            this.visible = true;
           setTimeout(() => {
             this.showLoader = false;
           }, 200);
@@ -145,10 +146,10 @@ export default {
     },
     setIndex(index) {
       if (index > Object.keys(data.data).length - 1) {
-          index = 0;
+        index = 0;
       }
       if (index < 0) {
-          index = Object.keys(data.data).length - 1;
+        index = Object.keys(data.data).length - 1;
       }
       return index;
     },

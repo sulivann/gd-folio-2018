@@ -1,5 +1,5 @@
 <template>
-  <div class="title-canvas">
+  <div v-bind:class="{'visible': isVisible === true}" class="title-canvas">
     <span v-bind:class="{'title__next-project--hidden': position !== 'footer'}" class="title__next-project">next project</span>
     <!-- <button class="back-home">back home</button> -->
     <canvas v-bind:class="{'home-project__title--bottom': position === 'footer'}" class="home-project__title"></canvas>
@@ -33,6 +33,7 @@
 
   export default {
     props: [
+      'visible',
       'titles',
       'projectIndex',
       'viewport',
@@ -65,6 +66,7 @@
         resizeTimer: undefined,
         req: undefined,
         verticalIncrement: '',
+        isVisible: this.visible,
         incrementDirection: '',
         morphingSVG: {
           el: '',
@@ -155,6 +157,10 @@
       cancelAnimationFrame(this.req);
     },
     watch: {
+      visible: (val) => {
+        console.log(val);
+        this.isVisible = val;
+      },
       canvasPos: function(val) {
         this.position = val;
         this.title.alpha = this.position === 'header' ? 1 : 0.7;
@@ -168,7 +174,6 @@
       },
       projectIndex: function(val) {
         this.titleIndex = val === undefined ? this.$store.getters.activeIndex : val;
-        console.log(this.titleIndex);
         this.setShape();
       }
     },
@@ -219,8 +224,10 @@
         this.container.addChild(this.sprite);
 
         this.app.ticker.add(() => {
-          this.render();
-          this.texture.update();
+          if (this.$route.name !== 'about'){
+            this.render();
+            this.texture.update();
+          }
         });
         this.setDisplay();
         this.setTransitionDuplications();
@@ -577,19 +584,19 @@
         this.titleAnimation.totalDuplications = 70 / this.pixelRatio;
         this.tl.to(this.shape, 0.7,
           {
-              morphSVG: this.endShape[this.titleIndex],
-              ease: Power2.easeOut,
-              strokeWidth: 2,
+            morphSVG: this.endShape[this.titleIndex],
+            ease: Power2.easeOut,
+            strokeWidth: 2,
           },
           ).to(this.morphingSVG.el, 0.7,
           {
-              attr: { viewBox: this.svgs[this.titleIndex].getAttribute('viewBox')},
-              ease: Power2.easeOut,
+            attr: { viewBox: this.svgs[this.titleIndex].getAttribute('viewBox')},
+            ease: Power2.easeOut,
 
           }, '-=1')
           .to(this.titleAnimation, 1, {
-              duplications: this.titleAnimation.totalDuplications,
-              ease: CustomEase.create('custom", "0.77, 0, 0.175, 1')
+            duplications: this.titleAnimation.totalDuplications,
+            ease: CustomEase.create('custom", "0.77, 0, 0.175, 1')
           }, '-=1');
       },
 
@@ -598,19 +605,19 @@
       * params(points: array) the points to draws
       */
       drawSvg(points, ratioX, ratioY) {
-          points.forEach(p => {
-              this.mainCanvas.ctx.moveTo(p[0] * this.responsiveRatio + ratioX, p[1] * this.responsiveRatio + ratioY);
-              for (let i = 2, len = p.length; i <= len;) {
-                  this.mainCanvas.ctx.bezierCurveTo(
-                      p[i++] * this.responsiveRatio + ratioX,
-                      p[i++] * this.responsiveRatio + ratioY,
-                      p[i++] * this.responsiveRatio + ratioX,
-                      p[i++] * this.responsiveRatio + ratioY,
-                      p[i++] * this.responsiveRatio + ratioX,
-                      p[i++] * this.responsiveRatio + ratioY
-                  );
-              }
-          });
+        points.forEach(p => {
+          this.mainCanvas.ctx.moveTo(p[0] * this.responsiveRatio + ratioX, p[1] * this.responsiveRatio + ratioY);
+          for (let i = 2, len = p.length; i <= len;) {
+            this.mainCanvas.ctx.bezierCurveTo(
+              p[i++] * this.responsiveRatio + ratioX,
+              p[i++] * this.responsiveRatio + ratioY,
+              p[i++] * this.responsiveRatio + ratioX,
+              p[i++] * this.responsiveRatio + ratioY,
+              p[i++] * this.responsiveRatio + ratioX,
+              p[i++] * this.responsiveRatio + ratioY
+            );
+          }
+        });
       },
 
       /*

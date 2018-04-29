@@ -102,19 +102,21 @@ export default {
   },
   beforeDestroy() {
     this.cancelEventListeners();
-    this.subscription();;
+    this.subscription();
     cancelAnimationFrame(this.req);
+  },
+  destroyed() {
   },
   methods: {
     init() {
       // initialize canvas
-      this.pixelRatio = window.devicePixelRatio;
-      this.mainCanvas.el = document.querySelector('.loading-home-project__title')
+      this.pixelRatio = 1;
+      this.mainCanvas.el = document.createElement('canvas')
       this.mainCanvas.ctx = this.mainCanvas.el.getContext('2d');
       this.mainCanvas.width = this.viewport.w;
       this.mainCanvas.height = this.viewport.h;
       this.verticalIncrement = this.viewport.h / 100 * this.pixelRatio;
-      this.finalPosition = this.$route.name === 'index' ? 'center' : 'header';
+      this.finalPosition = (this.$route.name === 'index' || this.$route.name === 'all-works') ? 'center' : 'header';
       this.projectsSvg = document.querySelectorAll('.loading-home-svgs__project-title');
       // this.svgs = document.querySelectorAll('svg .loading-svgs');
       this.shape = document.querySelector("#loading-shape")
@@ -125,8 +127,24 @@ export default {
       this.shape.setAttribute('d', document.querySelector('#loading').getAttribute('d'));
       this.morphingSVG.el.setAttribute('viewBox', document.querySelector('.loading-shape').getAttribute('viewBox'));
       
-      // this.incrementDirection = this.position === 'header' ? -1 : 1;
+      this.texture = PIXI.Texture.fromCanvas(this.mainCanvas.el);
+      this.app = new PIXI.Application(this.viewport.w, this.viewport.h, {
+        transparent: true,
+        view: this.$el.querySelector('.loading-home-project__title'),
+        resolution: this.pixelRatio,
+        autoResize: true,
+      });
+      this.container = new PIXI.Container();
+      this.app.stage.addChild(this.container);
+      this.sprite = new PIXI.Sprite(this.texture);
+      this.container.addChild(this.sprite);
 
+      this.app.ticker.add(() => {
+        this.render();
+        this.texture.update();
+      });
+      // this.incrementDirection = this.position === 'header' ? -1 : 1;
+      this.setTransitionDuplications();
       this.updateMorphingValues();
       // Subscribe to state project update
       this.subscribeToStoreEvents();
@@ -134,7 +152,7 @@ export default {
       this.setDisplay();
       setTimeout(() => {
         this.startDuplications();
-        this.render();
+        // this.render();
       }, 100);
     },
 
@@ -188,6 +206,7 @@ export default {
       this.mainCanvas.ctx.clearRect(0, 0 - this.canvasRatio * this.verticalIncrement, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
 
       if (this.drawLoadingAnimation.isMorphing === undefined && this.loadingAnimation.isComplete === undefined) {
+        console.log('staticcc');
         this.drawStaticTitle(data);
         return
       }
@@ -285,14 +304,9 @@ export default {
     */
     loadingMorphStart(data) {
       const duplicates = Math.trunc(Math.ceil(this.loadingAnimation.duplications));
-      if (this.loadingAnimation.duplicatesIncrement === 0){
-        // this.canvasRatio--;
-        // this.mainCanvas.ctx.translate(0, -this.verticalIncrement);
-      }
-      // this.canvasRatio++;
-      // this.mainCanvas.ctx.translate(0, (duplicates - this.loadingAnimation.duplicatesIncrement) * this.verticalIncrement);
+      
       this.loadingAnimation.duplicatesIncrement = duplicates;
-      for (let i = this.states.length; i < duplicates; i++ ){
+      for (let i = this.states.length; i <= duplicates; i++ ){
         this.states[i] = this.toBezier(data);
         this.sizes[i] = (this.mainCanvas.el.width / this.pixelRatio / 2) - this.svgWidth / (this.mainCanvas.el.width / this.pixelRatio / this.morphingSVG.visibleWidth) / 2 - this.morphingSVG.visibleX;
       }
@@ -318,7 +332,7 @@ export default {
     },
 
     loadingMorphEnd(data) {
-      const duplicates = Math.trunc(Math.ceil(this.loadingAnimation.duplications));
+      const duplicates = Math.trunc(Math.ceil(this.loadingAnimation.duplications)) === 0 ? 1 : Math.trunc(Math.ceil(this.loadingAnimation.duplications));
       for (let j = this.loadingAnimation.totalDuplications - 1 ; j >= this.loadingAnimation.totalDuplications - duplicates; j-- ) {
         const ratioX = this.sizes[j];
         const ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * j;
@@ -332,6 +346,7 @@ export default {
         // const fillStroke = 1;
         this.strokeFillClosePath(fillStroke);
         if (duplicates === 1 && j === this.loadingAnimation.totalDuplications - 1) {
+          this.loadingAnimation.totalDuplications = 0;
           this.loadingAnimation.isMorphing = undefined;
           this.loadingAnimation.isComplete = undefined;
           this.prepareDeletion();
@@ -349,10 +364,9 @@ export default {
       let ratioY;
       // Adapt the Y position to the page
       if (this.finalPosition == 'center') {
-        ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - ((- 1)  + 1) * this.verticalIncrement - this.morphingSVG.visibleY;
+        ratioY = this.mainCanvas.el.height / this.pixelRatio / 2 - (this.morphingSVG.visibleHeight / 2) - this.morphingSVG.visibleY;
       } else if (this.finalPosition == 'header') {
-        console.log((this.morphingSVG.visibleHeight / 2 / window.devicePixelRatio));
-        ratioY = this.mainCanvas.el.height / this.pixelRatio - this.verticalIncrement * this.loadingAnimation.totalDuplications + (this.morphingSVG.visibleHeight / 2 / window.devicePixelRatio) - (this.morphingSVG.visibleY / window.devicePixelRatio / 2);
+        ratioY = -(((this.morphingSVG.visibleHeight) / 3) + (this.morphingSVG.visibleY));
       }
 
       this.mainCanvas.ctx.beginPath();
@@ -448,7 +462,7 @@ export default {
       TweenMax.to(this.loadingAnimation, 1.2,
       {
         duplications: this.loadingAnimation.totalDuplications,
-        ease: Power2.easeOut,
+        ease: Power2.easeIn,
       });
     },
 
@@ -463,23 +477,39 @@ export default {
 
     startRemovingMorphDuplications() {
       // this.loadingAnimation.duplications = Math.trunc(Math.ceil(this.loadingAnimation.totalDuplications / 2));
-
+      const morphTime = this.finalPosition === 'center' ? 1 : 2;
       this.loadingAnimation.isComplete = true;
-      TweenMax.to(this.loadingAnimation, 1,
+      TweenMax.to(this.loadingAnimation, morphTime,
       {
         duplications: 1,
         ease: Power2.easeIn,
       });
     },
+    setTransitionDuplications() {
+      // if (this.finalPosition === 'center') {
+      //   // this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + this.morphingSVG.visibleHeight) / 2 / this.verticalIncrement)));
+      //   const svgVertical = (this.morphingSVG.visibleHeight) / 6 + this.morphingSVG.visibleY;
+      //   this.loadingAnimation.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio / 2) - svgVertical) / this.verticalIncrement);
+      //   console.log(this.loadingAnimation.totalDuplications);
+      // } else {
+      //   /* @TODO remplacer la taille du svg par celle correspondant au projet actif */
+      //   this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + (this.morphingSVG.visibleHeight * 0.3) )/ (this.verticalIncrement))));
+      //   console.log(this.loadingAnimation.totalDuplications);
+      // }
+    },
 
     startMorphingTitle(position) {
-      this.verticalIncrement = this.viewport.h / (100 / this.pixelRatio);
-      if (position === 'center') {
-        this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + this.morphingSVG.visibleHeight) / 2 / this.verticalIncrement)));
+      if (this.finalPosition === 'center') {
+        // this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + this.morphingSVG.visibleHeight) / 2 / this.verticalIncrement)));
+        const svgVertical = (this.morphingSVG.visibleHeight / 3 * 2) - this.morphingSVG.visibleY;
+        this.loadingAnimation.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio / 2) + svgVertical) / this.verticalIncrement);
       } else {
+        const svgVertical = (this.morphingSVG.visibleHeight / 3) - this.morphingSVG.visibleY;
+        this.loadingAnimation.totalDuplications = Math.ceil(((this.mainCanvas.el.height / this.pixelRatio) + svgVertical) / this.verticalIncrement);
         /* @TODO remplacer la taille du svg par celle correspondant au projet actif */
-        this.loadingAnimation.totalDuplications = Math.trunc(Math.ceil(((this.mainCanvas.el.height / this.pixelRatio + (this.morphingSVG.visibleHeight * 0.3) )/ (this.verticalIncrement))));
+        // this.loadingAnimation.totalDuplications = Math.ceil((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY))) / this.verticalIncrement);
       }
+      this.verticalIncrement = this.viewport.h / (100 / this.pixelRatio);      
       this.sizes.length = 0;
       this.states.length = 0;
       this.loadingAnimation.duplications = 0;
@@ -507,7 +537,6 @@ export default {
     render() {
       this.mainCanvas.ctx.clearRect(0, 0, this.mainCanvas.el.width / this.pixelRatio, this.mainCanvas.el.height / this.pixelRatio);
       this.onUpdate();
-      this.req = requestAnimationFrame(this.render);
     },
 
     resize() {
