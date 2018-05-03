@@ -1,12 +1,13 @@
-.about-aside {
+.case-header {
   width: 95%;
   left: 50%;
   transform: translateX(-50%);
-  justify-content: space-between;
+  justify-content: flex-end;
   display: flex;
   top: 0;
   position: absolute;
   margin-top: 50px;
+  z-index: 50;
 
   &__link {
     font-size: $font-size-small;

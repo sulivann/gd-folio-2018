@@ -77,8 +77,6 @@ export default {
     init() {
       window.onNuxtReady((app) => {
         app.$nuxt.$on('routeChanged', (to, from) => {
-          // const scrollbars = Scrollbar.getAll();
-          // if (scrollbars.length > 0) scrollbars[0].scrollTop = 0;
           if (
             from.name === 'work-slug' && to.name === 'work-slug' ||
             from.name === 'index' && to.name === 'work-slug'
@@ -88,7 +86,6 @@ export default {
             titleCanvas.style.bottom = 'auto';
             this.canvasPos = 'header';
           }
-          // console.log(from, to);
         })
       });
       this.resizeEvent = window.addEventListener('resize', this.checkMobileLayout);

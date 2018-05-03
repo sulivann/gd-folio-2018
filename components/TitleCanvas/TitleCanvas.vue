@@ -133,9 +133,13 @@
           this.position = 'header';
 
           if (scrollbars.length > 0) {
-            scrollbars[0].scrollTo(0, 0, 700, {
-              callback: this.backhome,
-            });
+            if (scrollbars[0].scrollTop > 0) {
+              scrollbars[0].scrollTo(0, 0, 700, {
+                callback: this.backhome,
+              });
+            } else {
+              this.backhome();
+            }
           }
         }
         if (mutation.type === 'TRIGGER_CLICK_TO_CASE_EVENT') {

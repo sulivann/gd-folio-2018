@@ -40,29 +40,34 @@ export default {
     mode: 'out-in',
     css: false,
     leave (el, done) {
-      let tl = new TimelineMax({ onComplete: done });
       const homeImages = document.querySelector('.home-images');
       const homeMenu = document.querySelector('.home-menu');
       const projectSubtitle = document.querySelector('.project-subtitle');
 
-      tl.add('first-step');
+      // BEST HACK EVER
+      if (homeImages && homeMenu && projectSubtitle) {
+        let tl = new TimelineMax({ onComplete: done });
+        tl.add('first-step');
 
-      tl.to(homeImages, 0.7, {
-        opacity: 0,
-        ease: Expo.easeOut
-      }, 'first-step');
+        tl.to(homeImages, 0.7, {
+          opacity: 0,
+          ease: Expo.easeOut
+        }, 'first-step');
 
-      tl.add('second-step');
+        tl.add('second-step');
 
-      tl.to(homeMenu, 0.7, {
-        opacity: 0,
-        ease: Expo.easeOut
-      }, 'second-step');
+        tl.to(homeMenu, 0.7, {
+          opacity: 0,
+          ease: Expo.easeOut
+        }, 'second-step');
 
-      tl.to(projectSubtitle, 0.7, {
-        opacity: 0,
-        ease: Expo.easeOut
-      }, 'second-step');
+        tl.to(projectSubtitle, 0.7, {
+          opacity: 0,
+          ease: Expo.easeOut
+        }, 'second-step');
+      } else {
+        done();
+      }
     }
   },
 

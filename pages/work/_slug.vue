@@ -1,5 +1,6 @@
 <template>
   <div class="work">
+    <case-header />
     <case-banner
       :banner="data.banner"/>
     <case-title
@@ -48,6 +49,7 @@
 </style>
 
 <script>
+import Scrollbar from 'smooth-scrollbar';
 // Data
 import data from '~/static/data.json';
 
@@ -60,6 +62,7 @@ import CaseMockUp from '~/components/CaseMockUp/CaseMockUp.vue';
 import CaseText from '~/components/CaseText/CaseText.vue';
 import CaseVideo from '~/components/CaseVideo/CaseVideo.vue';
 import CaseTitle from '~/components/CaseTitle/CaseTitle.vue';
+import CaseHeader from '~/components/CaseHeader/CaseHeader.vue';
 
 export default {
   transition: {
@@ -67,10 +70,18 @@ export default {
     css: false,
     leave (el, done) {
       if (this.$route.name === 'index' || this.$route.name === 'all-works') {
-        this.$store.dispatch('triggerBackToCenter');
-        setTimeout(() => {
-          done();
-        }, 800);
+        const scrollbars = Scrollbar.getAll();
+        if (scrollbars.length > 0) {
+          if (scrollbars[0].scrollTop > 0) {
+            this.$store.dispatch('triggerBackToCenter');
+            setTimeout(() => {
+              done();
+            }, 800);
+          } else {
+            this.$store.dispatch('triggerBackToCenter');
+            done();
+          }
+        }
       } else {
         done();
       }
@@ -165,7 +176,8 @@ export default {
     CaseMockUp,
     CaseText,
     CaseVideo,
-    CaseTitle
+    CaseTitle,
+    CaseHeader
   }
 };
 </script>

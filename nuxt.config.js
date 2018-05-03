@@ -16,9 +16,6 @@ module.exports = {
     script: [
       { src: 'https://cdn.jsdelivr.net/npm/ua-parser-js@0/dist/ua-parser.min.js' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
   },
 
   /*

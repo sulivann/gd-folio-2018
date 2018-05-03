@@ -7,4 +7,8 @@ $about-description-max-width: 380px;
   p:not(:last-child) {
     margin-bottom: $space-medium;
   }
+
+  p {
+    font-size: $font-size-base;
+  }
 }

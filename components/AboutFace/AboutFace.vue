@@ -1,9 +1,12 @@
 <template>
-  <canvas
+  <!-- <canvas
     id="about-face"
     :width="`${this.canvas.width}px`"
     :height="`${this.canvas.height}px`">
-  </canvas>
+  </canvas> -->
+  <img
+    src="~/assets/img/face.png"
+    id="about-face"/>
 </template>
 
 <style lang="scss">
@@ -11,8 +14,8 @@
 </style>
 
 <script>
-  import faceSrc from 'assets/img/face.png';
-  import faceLineSrc from 'assets/img/face_line.png';
+  // import faceSrc from 'assets/img/face.png';
+  // import faceLineSrc from 'assets/img/face_line.png';
 
   export default {
     data() {
@@ -25,9 +28,9 @@
       }
     },
     mounted() {
-      this.bind();
-      this.initCanvas();
-      this.render();
+      // this.bind();
+      // this.initCanvas();
+      // this.render();
     },
     methods: {
       bind() {
