@@ -126,7 +126,7 @@ export default {
       this.morphingSVG.el = document.querySelector('.loading-morph-shape');
       this.shape.setAttribute('d', document.querySelector('#loading').getAttribute('d'));
       this.morphingSVG.el.setAttribute('viewBox', document.querySelector('.loading-shape').getAttribute('viewBox'));
-      
+
       this.texture = PIXI.Texture.fromCanvas(this.mainCanvas.el);
       this.app = new PIXI.Application(this.viewport.w, this.viewport.h, {
         transparent: true,
@@ -189,7 +189,7 @@ export default {
     setEventListeners() {
       window.addEventListener('resize', this.resize)
     },
-    
+
     cancelEventListeners() {
       window.removeEventListener('resize', this.resize);
     },
@@ -304,7 +304,7 @@ export default {
     */
     loadingMorphStart(data) {
       const duplicates = Math.trunc(Math.ceil(this.loadingAnimation.duplications));
-      
+
       this.loadingAnimation.duplicatesIncrement = duplicates;
       for (let i = this.states.length; i <= duplicates; i++ ){
         this.states[i] = this.toBezier(data);
@@ -509,7 +509,7 @@ export default {
         /* @TODO remplacer la taille du svg par celle correspondant au projet actif */
         // this.loadingAnimation.totalDuplications = Math.ceil((((this.mainCanvas.el.height / this.pixelRatio) - (this.morphingSVG.visibleHeight + this.morphingSVG.visibleY))) / this.verticalIncrement);
       }
-      this.verticalIncrement = this.viewport.h / (100 / this.pixelRatio);      
+      this.verticalIncrement = this.viewport.h / (100 / this.pixelRatio);
       this.sizes.length = 0;
       this.states.length = 0;
       this.loadingAnimation.duplications = 0;

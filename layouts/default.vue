@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="app">
     <div class="main" v-smooth-scroll>
       <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/>
-      <title-canvas 
+      <title-canvas
         :visible="visible"
         :titles="data.titles"
         :viewport="viewport"
         :canvasPos="canvasPos"
         :projectIndex="getIndex" />
-      <nuxt />
+      <nuxt v-show="visible"/>
     </div>
   </div>
 </template>
@@ -83,7 +83,7 @@ export default {
           ){
             const titleCanvas = document.querySelector('.title-canvas');
             titleCanvas.style.top = 0;
-            titleCanvas.style.bottom = 'auto';            
+            titleCanvas.style.bottom = 'auto';
             this.canvasPos = 'header';
           }
         })
