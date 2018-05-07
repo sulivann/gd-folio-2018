@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="{'visible': isVisible === true}" class="title-canvas">
+  <div v-bind:class="{'visible': visible}" class="title-canvas">
     <span v-bind:class="{'title__next-project--hidden': position !== 'footer'}" class="title__next-project">next project</span>
     <!-- <button class="back-home">back home</button> -->
     <canvas v-bind:class="{'home-project__title--bottom': position === 'footer'}" class="home-project__title"></canvas>
@@ -66,7 +66,6 @@
         resizeTimer: undefined,
         req: undefined,
         verticalIncrement: '',
-        isVisible: this.visible,
         incrementDirection: '',
         morphingSVG: {
           el: '',
@@ -158,7 +157,6 @@
     },
     watch: {
       visible: (val) => {
-        console.log(val);
         this.isVisible = val;
       },
       canvasPos: function(val) {

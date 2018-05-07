@@ -1,14 +1,21 @@
 <template>
   <div class="app">
     <div class="main" v-smooth-scroll>
-      <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/>
+      <!-- <Loader v-if="showLoader" :titles="data.titles" :viewport="viewport"/> -->
+      <!-- <title-canvas
+        :visible="visible"
+        :titles="data.titles"
+        :viewport="viewport"
+        :canvasPos="canvasPos"
+        :projectIndex="getIndex" /> -->
+      <!-- <nuxt v-show="visible"/> -->
       <title-canvas
         :visible="visible"
         :titles="data.titles"
         :viewport="viewport"
         :canvasPos="canvasPos"
         :projectIndex="getIndex" />
-      <nuxt v-show="visible"/>
+      <nuxt />
     </div>
   </div>
 </template>
@@ -55,7 +62,7 @@ export default {
       canvasPos: this.$route.name === 'work-slug' ? 'header' : this.$route.name === 'about' ? null : 'center',
       showLoader: true,
       showContent: false,
-      visible: false,
+      visible: true,
     }
   },
 
@@ -74,7 +81,6 @@ export default {
 
   methods: {
     init() {
-      console.log(this.$route.name);
       window.onNuxtReady((app) => {
         app.$nuxt.$on('routeChanged', (to, from) => {
           if (
@@ -85,6 +91,10 @@ export default {
             titleCanvas.style.top = 0;
             titleCanvas.style.bottom = 'auto';
             this.canvasPos = 'header';
+          } else if (to.name === 'about') {
+            this.visible = false;
+          } else if (from.name === 'about') {
+            this.visible = true;
           }
         })
       })
@@ -93,7 +103,8 @@ export default {
       let subscribe = this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'SET_LOADERHIDDEN' && this.$store.state.loaderHidden === true) {
           this.showContent = true;
-            this.visible = true;
+          this.visible = true;
+
           setTimeout(() => {
             this.showLoader = false;
           }, 200);
